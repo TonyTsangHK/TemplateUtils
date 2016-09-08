@@ -1,0 +1,23 @@
+a: 3, b: 30
+a: 4, b: 40
+a: 5, b: 50
+
+currentIndex: 0
+currentIndex: 1
+currentIndex: 2
+currentIndex: 3
+currentIndex: 4
+currentIndex: 5
+currentIndex: 6
+currentIndex: 7
+currentIndex: 8
+currentIndex: 9
+
+From: 2, 2 / 10
+From: 2, 3 / 10
+From: 2, 4 / 10
+From: 2, 5 / 10
+From: 2, 6 / 10
+From: 2, 7 / 10
+From: 2, 8 / 10
+From: 2, 9 / 10

@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+    <head>
+        <title>$@=docTitle=@$</title>
+        <style type="text/css">
+$@*
+    Include css content as inline style sheet
+*@$
+$@INC={"file": "simple.csst"}=INC@$
+        </style>
+    </head>
+    <body>
+        <div class="content">
+            <label for="name">$@=labels.name=@$</label>
+            <input id="name" name="name" type="text" class="inp" />
+            <br/>
+
+            <label for="gender">$@=labels.gender=@$</label>
+            <select id="gender" name="gender" class="inp">
+                <option>$@=labels.genderOptions.female=@$</option>
+                <option>$@=labels.genderOptions.male=@$</option>
+            </select>
+            <br/>
+        </div>
+    </body>
+</html>

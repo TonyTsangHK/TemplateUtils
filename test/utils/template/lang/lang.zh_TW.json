@@ -1,0 +1,12 @@
+{
+    "docTitle": "語言範本測試",
+
+    "labels": {
+        "name": "名稱",
+        "gender": "性別",
+        "genderOptions": {
+            "female": "女性",
+            "male": "男性"
+        }
+    }
+}

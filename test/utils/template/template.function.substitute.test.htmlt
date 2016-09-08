@@ -1,0 +1,8 @@
+List size: $@F={"method": "testingMethod", "params": [1, 2, 3.0]}=F@$
+Map size: $@F={"method": "testingMethod", "paramMap": {"val1": "val1", "val2": "val2"}}=F@$
+escape: $@F={"method": "fakeHTML", "escape": true}=F@$
+Static method call test: $@F={
+    "className": "utils.string.FormatUtils",
+    "method": "formatNumber",
+    "params": [987654321.987654321, 2, 2, true]
+}=F@$

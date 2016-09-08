@@ -1,0 +1,2 @@
+This is a file to be included inside test sub package.
+Variable bac value: $@=bac=@$

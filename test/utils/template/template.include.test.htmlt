@@ -1,0 +1,5 @@
+Including file: incFile.htmlt
+$@INC={"file": "incFile.htmlt"}=INC@$
+
+Including file inside sub-package: test.incFile.htmlt
+$@INC={"package": "utils/template/test", "file": "incFile.htmlt"}=INC@$

@@ -1,0 +1,81 @@
+apply plugin: 'java'
+apply plugin: 'kotlin'
+
+sourceCompatibility = 1.8
+version = '1.1.1'
+
+buildscript {
+    ext.kotlin_version = "1.0.3"
+
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+repositories {
+    mavenLocal()
+    jcenter()
+}
+
+dependencies {
+    compile project(':Utilities')
+    compile project(':FormulaUtils')
+    compile project(':JSON')
+    compile project(':JsonUtils')
+
+    compile "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.13'
+    compile group: 'org.slf4j', name: 'log4j-over-slf4j', version: '1.7.13'
+    compile group: 'org.slf4j', name: 'jcl-over-slf4j', version: '1.7.13'
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.1.3'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.3.2'
+    compile group: 'net.sf.ehcache', name: 'ehcache-core', version: '2.6.10'
+    testCompile group: 'org.testng', name: 'testng', version: '6.8.17'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+        }
+        kotlin {
+            srcDir 'src'
+        }
+        resources {
+            srcDir 'src'
+            exclude '**/*.java'
+            exclude '**/*.kt'
+        }
+    }
+
+    test {
+        java {
+            srcDir 'test'
+        }
+        kotlin {
+            srcDir 'test'
+        }
+        resources {
+            srcDir 'test'
+            exclude '**/*.java'
+            exclude '**/*.kt'
+        }
+    }
+}
+
+test {
+    useTestNG() {
+        suites 'test/AllTest.xml'
+    }
+
+    testLogging.showStandardStreams = true
+}

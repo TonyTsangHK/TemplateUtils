@@ -1,0 +1,51 @@
+Template tag descriptions
+    - Variable:
+        startTag: $@=Variable.startTag=@$
+        endTag: $@=Variable.endTag=@$
+        Usage: substitute variable value
+
+        Multiple keys can be supplied which is separated by commas, the result will be the first non null value of those keys.
+
+        e.g. $@=Variable.startTag=@$keys.nonExistsKey, labels.multipleKeyNonNullKey, keys.notExistsKey2, labels.multiKey3$@=Variable.endTag=@$
+                will output: This key has value, actual result: $@=keys.nonExistsKey, labels.multipleKeyNonNullKey, keys.notExistsKey2, labels.multiKey3=@$
+             & $@=Variable.startTag=@$labels.multiKey1, labels.multiKey1, labels.multiKey2, labels.multiKey3, labels.multiKey4, labels.multiKey5 $@=Variable.endTag=@$
+                will out: multiKey1, actual result: $@=labels.multiKey1, labels.multiKey1, labels.multiKey2, labels.multiKey3, labels.multiKey4, labels.multiKey5 =@$
+
+    - Function:
+        startTag: $@=Function.startTag=@$
+        endTag: $@=Function.endTag=@$
+        Sub parameter (JSON):
+            className: full class name, optional, if not provided, the valueSubstitutor will be used
+            method: method name, if no paramMap / params default to empty parameter method (must be a static method if className is provided)
+            params (optional): method parameter in list form
+            paramMap (optional): method parameter in map form, target method will be [method](Map.class)
+            escape (optional, default false): escape the final output as html
+        Usage: substitute function output
+
+    - Arithmetic:
+        startTag: $@=Arithmetic.startTag=@$
+        endTag: $@=Arithmetic.endTag=@$
+        Usage: Substitute arithmetic expression by its result
+
+    - Repeat:
+        startTag: $@=Repeat.startTag=@$
+        endTag: $@=Repeat.endTag=@$
+        Sub parameter:
+            template: repeating template, currentIndex, start, length will be provided as variable.
+            valueLists (optional): variable list used in repeat template, element value will be substituted into final output
+            start (optional, default 0): start index of valueLists if defined
+            length (optional, default to max size of valueLists): if defined, template will be repeated as length (times)
+        Usage: substitute with repeat template
+
+    - Include
+        startTag: $@=Include.startTag=@$
+        endTag: $@=Include.endTag=@$
+        Usage: Include external content/template
+$@*
+    This is a comment, it will be ignored by template processor
+*@$
+
+    - Comment
+        startTag: $@=Comment.startTag=@$
+        endTag: $@=Comment.endTag=@$
+        Usage: Template comment, ignored by template processor

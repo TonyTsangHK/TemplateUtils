@@ -1,0 +1,2 @@
+$@SUB={"key": "messages.msgSubTest", "substitutes": ["directContent", "$@=messages.msgTestValue=@$", "$@=testValue=@$"]}=SUB@$
+$@SUB=Inline sub variable value: $@=messages.msgTestValue=@$ and also inline variableMap substitute: $@=testValue=@$=SUB@$

@@ -1,0 +1,4 @@
+Value from direct content: directContent
+value from inline substitute: This is test value from def.json
+Value from inline variable map substitute: This is test value from variableMap
+Inline sub variable value: This is test value from def.json and also inline variableMap substitute: This is test value from variableMap

@@ -1,0 +1,8 @@
+$@RPT={
+    "valueLists": ["a", "b"],
+    "start": 2,
+    "length": 5,
+    "template": "a: $@=a=@$, b: $@=b=@$\n"
+}=RPT@$
+$@RPT={"length": 10, "template": "currentIndex: $@=currentIndex=@$\n"}=RPT@$
+$@RPT={"start": "$@=testStart=@$", "length": "$@=testLength=@$", "template": "From: $@=start=@$, $@=currentIndex=@$ / $@=length=@$\n"}=RPT@$

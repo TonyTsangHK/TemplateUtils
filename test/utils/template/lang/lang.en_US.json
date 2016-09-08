@@ -1,0 +1,12 @@
+{
+    "docTitle": "Test lang template",
+
+    "labels": {
+        "name": "Name",
+        "gender": "Gender",
+        "genderOptions": {
+            "female": "Female",
+            "male": "Male"
+        }
+    }
+}

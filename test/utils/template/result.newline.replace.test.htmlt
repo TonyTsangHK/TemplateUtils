@@ -1,0 +1,14 @@
+The following content should be properly bred:
+<div>
+    This is line1<br/>This is line2<br/>This is line3<br/>This is final line without new line!
+</div>
+
+The following content should be converted to new line:
+
+<pre>
+    This is line1
+This is line2
+This is line 3
+This is line4
+This is final line without br!
+</pre>

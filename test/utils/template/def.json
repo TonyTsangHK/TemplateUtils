@@ -1,0 +1,10 @@
+{
+  "labels": {
+    "val1": "value1",
+    "val2": "value2"
+  },
+  "messages": {
+    "msgSubTest": "Value from direct content: {0}\nvalue from inline substitute: {1}\nValue from inline variable map substitute: {2}",
+    "msgTestValue": "This is test value from def.json"
+  }
+}

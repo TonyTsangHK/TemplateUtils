@@ -1,0 +1,10 @@
+The following content should be properly bred:
+<div>
+    $@BR=newlinedContent=BR@$
+</div>
+
+The following content should be converted to new line:
+
+<pre>
+    $@NL=bredContent=NL@$
+</pre>

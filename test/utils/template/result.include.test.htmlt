@@ -1,0 +1,7 @@
+Including file: incFile.htmlt
+This is a file to be included.
+Variable abc value: inc.abc
+
+Including file inside sub-package: test.incFile.htmlt
+This is a file to be included inside test sub package.
+Variable bac value: inc.test.bac

@@ -1,0 +1,25 @@
+div.content {
+    padding-left: 10px;
+    display: table-cell;
+    vertical-align: middle;
+    width: $@=format.contentBlock.width=@$px;
+    height: $@=format.contentBlock.height=@$px;
+    border: 1px solid black;
+}
+
+div.content label, div.content .inp {
+    vertical-align: middle;
+}
+
+.inp {
+    margin-left: 5px;
+    min-width: $@=format.inputWidth=@$px;
+    max-width: $@=format.inputWidth=@$px;
+}
+
+label {
+    display: inline-block;
+    min-width: $@=format.labelWidth=@$px;
+    max-width: $@=format.labelWidth=@$px;
+    text-align: right;
+}

@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Test lang template</title>
+        <style type="text/css">
+
+div.content {
+    padding-left: 10px;
+    display: table-cell;
+    vertical-align: middle;
+    width: 250px;
+    height: 100px;
+    border: 1px solid black;
+}
+
+div.content label, div.content .inp {
+    vertical-align: middle;
+}
+
+.inp {
+    margin-left: 5px;
+    min-width: 150px;
+    max-width: 150px;
+}
+
+label {
+    display: inline-block;
+    min-width: 65px;
+    max-width: 65px;
+    text-align: right;
+}
+        </style>
+    </head>
+    <body>
+        <div class="content">
+            <label for="name">Name</label>
+            <input id="name" name="name" type="text" class="inp" />
+            <br/>
+
+            <label for="gender">Gender</label>
+            <select id="gender" name="gender" class="inp">
+                <option>Female</option>
+                <option>Male</option>
+            </select>
+            <br/>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,16 @@
+rootProject.name = 'TemplateUtils'
+
+include 'Utilities'
+project(':Utilities').projectDir = new File('../Utilities')
+
+include 'FormulaUtils'
+project(':FormulaUtils').projectDir = new File('../FormulaUtils')
+
+include 'JSON'
+project(':JSON').projectDir = new File('../JSON')
+
+include ':ByteUtils'
+project(':ByteUtils').projectDir = new File('../ByteUtils')
+
+include 'JsonUtils'
+project(':JsonUtils').projectDir = new File('../JsonUtils')

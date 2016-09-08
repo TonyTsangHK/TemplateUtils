@@ -1,0 +1,13 @@
+{
+  "labels": {
+    "val1": "masterValue1",
+    "master": "master only value",
+
+    "multipleKeyNonNullKey": "This key has value",
+    "multiKey1": "multiKey1",
+    "multiKey2": "multiKey2",
+    "multiKey3": "multiKey3",
+    "multiKey4": "multiKey4",
+    "multiKey5": "multiKey5"
+  }
+}

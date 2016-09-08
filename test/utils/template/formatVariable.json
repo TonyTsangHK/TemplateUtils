@@ -1,0 +1,10 @@
+{
+    "format": {
+        "labelWidth": 65,
+        "inputWidth": 150,
+        "contentBlock": {
+            "width": 250,
+            "height": 100
+        }
+    }
+}
