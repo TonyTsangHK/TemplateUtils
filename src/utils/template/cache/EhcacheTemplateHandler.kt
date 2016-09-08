@@ -26,7 +26,6 @@ object EhcacheTemplateHandler: TemplateCacheHandler {
             if (cache.isElementInMemory(key)) {
                 val element = cache.get(key)
                 if (element != null && element.objectValue != null && !element.isExpired) {
-                    org.slf4j.LoggerFactory.getLogger(EhcacheTemplateHandler.javaClass).debug("Doing work!")
                     return element.objectValue.toString()
                 }
             }
