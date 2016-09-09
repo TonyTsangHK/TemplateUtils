@@ -31,7 +31,7 @@ dependencies {
     compile project(':JSON')
     compile project(':JsonUtils')
 
-    compile "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.13'
     compile group: 'org.slf4j', name: 'log4j-over-slf4j', version: '1.7.13'
