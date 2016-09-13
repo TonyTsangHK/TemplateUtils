@@ -438,7 +438,7 @@ class ConstantHandler: ValueSubstitutorKt {
     }
 
     override fun getVariableBigDecimalValue(keys: Array<String>): BigDecimal {
-        return getVariableBigDecimalValue(keys, BigDecimal.ZERO)
+        return getVariableBigDecimalValue(keys, BigDecimal.ZERO)!!
     }
 
     override fun getVariableIntegerValue(keys: Array<String>, defaultValue: Int): Int {
@@ -453,7 +453,7 @@ class ConstantHandler: ValueSubstitutorKt {
         return MathUtil.parseLong(v.toString(), 10, defaultValue)
     }
 
-    override fun getVariableBigDecimalValue(keys: Array<String>, defaultValue: BigDecimal): BigDecimal {
+    override fun getVariableBigDecimalValue(keys: Array<String>, defaultValue: BigDecimal?): BigDecimal? {
         val v = getConstantValue<Any>(keys, false)
 
         return MathUtil.parseBigDecimal(v.toString(), defaultValue)
@@ -468,7 +468,7 @@ class ConstantHandler: ValueSubstitutorKt {
     }
 
     override fun getVariableBigDecimalValue(key: String): BigDecimal {
-        return getVariableBigDecimalValue(key, BigDecimal.ZERO)
+        return getVariableBigDecimalValue(key, BigDecimal.ZERO)!!
     }
 
     override fun getVariableIntegerValue(key: String, defaultValue: Int): Int {
@@ -483,7 +483,7 @@ class ConstantHandler: ValueSubstitutorKt {
         return MathUtil.parseLong(v.toString(), 10, defaultValue)
     }
 
-    override fun getVariableBigDecimalValue(key: String, defaultValue: BigDecimal): BigDecimal {
+    override fun getVariableBigDecimalValue(key: String, defaultValue: BigDecimal?): BigDecimal? {
         val v = getConstantValue<Any>(key, false)
 
         return MathUtil.parseBigDecimal(v.toString(), defaultValue)

@@ -45,7 +45,7 @@ object EmptyValueSubstitutor : ValueSubstitutorKt {
         return BigDecimal.ZERO
     }
 
-    override fun getVariableBigDecimalValue(keys: Array<String>, defaultValue: BigDecimal): BigDecimal {
+    override fun getVariableBigDecimalValue(keys: Array<String>, defaultValue: BigDecimal?): BigDecimal {
         return BigDecimal.ZERO
     }
 
@@ -53,7 +53,7 @@ object EmptyValueSubstitutor : ValueSubstitutorKt {
         return BigDecimal.ZERO
     }
 
-    override fun getVariableBigDecimalValue(key: String, defaultValue: BigDecimal): BigDecimal {
+    override fun getVariableBigDecimalValue(key: String, defaultValue: BigDecimal?): BigDecimal {
         return BigDecimal.ZERO
     }
 

@@ -182,10 +182,10 @@ class ValueHandler @JvmOverloads constructor(private val substitutor: ValueSubst
     }
 
     override fun getVariableBigDecimalValue(keys: Array<String>): BigDecimal {
-        return getVariableBigDecimalValue(keys, BigDecimal.ZERO)
+        return getVariableBigDecimalValue(keys, BigDecimal.ZERO)!!
     }
 
-    override fun getVariableBigDecimalValue(keys: Array<String>, defaultValue: BigDecimal): BigDecimal {
+    override fun getVariableBigDecimalValue(keys: Array<String>, defaultValue: BigDecimal?): BigDecimal? {
         val v = getVariableValue<Any>(keys)
 
         if (v == null) {
@@ -201,7 +201,7 @@ class ValueHandler @JvmOverloads constructor(private val substitutor: ValueSubst
         return getVariableBigDecimalValue(key.split(".").dropLastWhile { it.isEmpty() }.toTypedArray())
     }
 
-    override fun getVariableBigDecimalValue(key: String, defaultValue: BigDecimal): BigDecimal {
+    override fun getVariableBigDecimalValue(key: String, defaultValue: BigDecimal?): BigDecimal? {
         return getVariableBigDecimalValue(key.split(".").dropLastWhile { it.isEmpty() }.toTypedArray(), defaultValue)
     }
 

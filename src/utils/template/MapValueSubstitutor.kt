@@ -156,10 +156,10 @@ class MapValueSubstitutor(private val valueMap: Map<String, Any>) : ValueSubstit
     }
 
     override fun getVariableBigDecimalValue(keys: Array<String>): BigDecimal {
-        return getVariableBigDecimalValue(keys, BigDecimal.ZERO)
+        return getVariableBigDecimalValue(keys, BigDecimal.ZERO)!!
     }
 
-    override fun getVariableBigDecimalValue(keys: Array<String>, defaultValue: BigDecimal): BigDecimal {
+    override fun getVariableBigDecimalValue(keys: Array<String>, defaultValue: BigDecimal?): BigDecimal? {
         val v = getVariableValue<Any>(keys, false)
 
         if (v == null) {
@@ -175,7 +175,7 @@ class MapValueSubstitutor(private val valueMap: Map<String, Any>) : ValueSubstit
         return getVariableBigDecimalValue(key.split(".").dropLastWhile { it.isEmpty() }.toTypedArray())
     }
 
-    override fun getVariableBigDecimalValue(key: String, defaultValue: BigDecimal): BigDecimal {
+    override fun getVariableBigDecimalValue(key: String, defaultValue: BigDecimal?): BigDecimal? {
         return getVariableBigDecimalValue(key.split(".").dropLastWhile { it.isEmpty() }.toTypedArray(), defaultValue)
     }
 

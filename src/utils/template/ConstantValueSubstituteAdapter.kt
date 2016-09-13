@@ -79,7 +79,7 @@ abstract class ConstantValueSubstituteAdapter protected constructor(val constant
         return constantHandler.getVariableBigDecimalValue(keys)
     }
 
-    override fun getVariableBigDecimalValue(keys: Array<String>, defaultValue: BigDecimal): BigDecimal {
+    override fun getVariableBigDecimalValue(keys: Array<String>, defaultValue: BigDecimal?): BigDecimal? {
         return constantHandler.getVariableBigDecimalValue(keys, defaultValue)
     }
 
@@ -87,7 +87,7 @@ abstract class ConstantValueSubstituteAdapter protected constructor(val constant
         return constantHandler.getVariableBigDecimalValue(key)
     }
 
-    override fun getVariableBigDecimalValue(key: String, defaultValue: BigDecimal): BigDecimal {
+    override fun getVariableBigDecimalValue(key: String, defaultValue: BigDecimal?): BigDecimal? {
         return constantHandler.getVariableBigDecimalValue(key, defaultValue)
     }
 
