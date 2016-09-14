@@ -256,9 +256,8 @@ class ConstantHandler: ValueSubstitutorKt {
             }
         }
     }
-
-    @SuppressWarnings("unchecked")
-    fun <V> getConstantValue(keys: Array<String>, nullSafe: Boolean, vararg substitutes: String): V {
+    
+    fun <V> getConstantValue(keys: Array<String>, nullSafe: Boolean, vararg substitutes: String): V? {
         ensureConstantMap()
 
         var cmap: MutableMap<String, Any?>? = constantMap
@@ -299,9 +298,8 @@ class ConstantHandler: ValueSubstitutorKt {
             }
         }
     }
-
-    @SuppressWarnings("unchecked")
-    fun <V> getConstantValue(keys: Array<String>, nullSafe: Boolean, substituteMap: Map<String, Any>?): V {
+    
+    fun <V> getConstantValue(keys: Array<String>, nullSafe: Boolean, substituteMap: Map<String, Any>?): V? {
         ensureConstantMap()
 
         var cmap: MutableMap<String, Any?>? = constantMap
@@ -342,36 +340,59 @@ class ConstantHandler: ValueSubstitutorKt {
         }
     }
 
-    fun <V> getConstantValue(key: String, nullSafe: Boolean, vararg substitutes: String): V {
+    fun <V> getConstantValue(key: String, nullSafe: Boolean, vararg substitutes: String): V? {
         return getConstantValue(key.split(".").dropLastWhile { it.isEmpty() }.toTypedArray(), nullSafe, *substitutes)
     }
 
-    fun <V> getConstantValue(key: String, nullSafe: Boolean, substituteMap: Map<String, Any>): V {
+    fun <V> getConstantValue(key: String, nullSafe: Boolean, substituteMap: Map<String, Any>): V? {
         return getConstantValue(key.split(".").dropLastWhile { it.isEmpty() }.toTypedArray(), nullSafe, substituteMap)
     }
 
-    fun getConstantStringValue(keys: Array<String>, nullSafe: Boolean, vararg substitutes: String): String {
-        return getConstantValue<Any>(keys, nullSafe, *substitutes) as String
+    fun getConstantStringValue(keys: Array<String>, nullSafe: Boolean, vararg substitutes: String): String? {
+        val v = getConstantValue<Any>(keys, nullSafe, *substitutes)
+        
+        if (v != null) {
+            return v.toString()
+        } else {
+            return if (nullSafe) "" else null
+        }
     }
 
-    fun getConstantStringValue(keys: Array<String>, nullSafe: Boolean, substituteMap: Map<String, Any>): String {
-        return getConstantValue<Any>(keys, nullSafe, substituteMap) as String
+    fun getConstantStringValue(keys: Array<String>, nullSafe: Boolean, substituteMap: Map<String, Any>): String? {
+        val v = getConstantValue<Any>(keys, nullSafe, substituteMap)
+        
+        if (v != null) {
+            return v.toString()
+        } else {
+            return if (nullSafe) "" else null
+        }
     }
 
     fun getConstantStringValue(keys: Array<String>): String {
         return getConstantStringValue(keys)
     }
 
-    fun getConstantStringValue(key: String, nullSafe: Boolean, vararg substitutes: String): String {
-        return getConstantValue<Any>(key.split(".").dropLastWhile { it.isEmpty() }.toTypedArray(), nullSafe, *substitutes) as String
+    fun getConstantStringValue(key: String, nullSafe: Boolean, vararg substitutes: String): String? {
+        val v = getConstantValue<Any>(key.split(".").dropLastWhile { it.isEmpty() }.toTypedArray(), nullSafe, *substitutes)
+        if (v != null) {
+            return v.toString()
+        } else {
+            return if (nullSafe) "" else null
+        }
     }
 
-    fun getConstantStringValue(key: String, nullSafe: Boolean, substituteMap: Map<String, Any>): String {
-        return getConstantValue<Any>(key.split(".").dropLastWhile { it.isEmpty() }.toTypedArray(), nullSafe, substituteMap) as String
+    fun getConstantStringValue(key: String, nullSafe: Boolean, substituteMap: Map<String, Any>): String? {
+        val v = getConstantValue<Any>(key.split(".").dropLastWhile { it.isEmpty() }.toTypedArray(), nullSafe, substituteMap)
+        if (v != null) {
+            return v as String
+        } else {
+            return if (nullSafe) "" else null
+        }
     }
 
     fun getConstantStringValue(key: String): String {
-        return getConstantStringValue(key, true)
+        // Since nullSafe, result will not be null
+        return getConstantStringValue(key, true)!!
     }
 
     fun keys(): List<String> {
