@@ -404,7 +404,7 @@ class TemplateProcessor @JvmOverloads constructor(
         val contentMap = JsonParser.getInstance().parseMap<Any>(content)
 
         if (contentMap != null && contentMap.size > 0 && contentMap.containsKey("key")) {
-            val key = DataManipulator.getStringValue(contentMap, "key", "")
+            val key = DataManipulator.getStringValue(contentMap, "key", "")!!
 
             var keyContent = extractStringValue(key, instance, variableMap)
 
