@@ -492,16 +492,16 @@ class TemplateProcessor @JvmOverloads constructor(
             nonPrimitiveParameterClasses[i] = clz
         }
 
-        val method: Method
-        try {
-            method = targetClass.getMethod(methodName, *nonPrimitiveParameterClasses)
-        } catch (e: NoSuchMethodException) {
-            if (hasAtLeastOnePrimitive) {
-                method = targetClass.getMethod(methodName, *primitiveParameterClasses)
-            } else {
-                throw e
+        val method: Method = 
+            try {
+                targetClass.getMethod(methodName, *nonPrimitiveParameterClasses)
+            } catch (e: NoSuchMethodException) {
+                if (hasAtLeastOnePrimitive) {
+                    targetClass.getMethod(methodName, *primitiveParameterClasses)
+                } else {
+                    throw e
+                }
             }
-        }
 
         return method
     }
@@ -514,9 +514,9 @@ class TemplateProcessor @JvmOverloads constructor(
 
         val functionDescriptor = JsonParser.getInstance().parseMap<Any>(functionDescriptorString)
 
-        val clz: Class<*>?
+        var clz: Class<*>?
 
-        val invokeInstance: Any?
+        var invokeInstance: Any?
 
         if (functionDescriptor.containsKey("className")) {
             try {
