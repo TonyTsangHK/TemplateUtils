@@ -30,7 +30,7 @@ class ResourceLoader(parentResourcePath: String?) {
         }
     }
 
-    fun getResource(resourceLocation: String): URL {
+    fun getResource(resourceLocation: String): URL? {
         val url: URL?
 
         val classLoader = Thread.currentThread().contextClassLoader
