@@ -76,7 +76,7 @@ class SubstituteInstance : ValueSubstitutorKt {
         return constantHandler!!.getVariableLongValue(keys, defaultValue)
     }
 
-    override fun getVariableBigDecimalValue(keys: Array<String>, defaultValue: BigDecimal): BigDecimal {
+    override fun getVariableBigDecimalValue(keys: Array<String>, defaultValue: BigDecimal?): BigDecimal? {
         return constantHandler!!.getVariableBigDecimalValue(keys, defaultValue)
     }
 
@@ -100,7 +100,7 @@ class SubstituteInstance : ValueSubstitutorKt {
         return constantHandler!!.getVariableLongValue(key, defaultValue)
     }
 
-    override fun getVariableBigDecimalValue(key: String, defaultValue: BigDecimal): BigDecimal {
+    override fun getVariableBigDecimalValue(key: String, defaultValue: BigDecimal?): BigDecimal? {
         return constantHandler!!.getVariableBigDecimalValue(key, defaultValue)
     }
 
@@ -150,27 +150,27 @@ class SubstituteInstance : ValueSubstitutorKt {
         private val constantHandler = ConstantFactory.getInstance().getConstantHandler(
                 masterConstantHandler!!, SubstituteInstance::class.java, "def.json")
 
-        fun <V> getConstantValue(keys: Array<String>, nullSafe: Boolean, vararg substitutes: String): V {
+        fun <V> getConstantValue(keys: Array<String>, nullSafe: Boolean, vararg substitutes: String): V? {
             return constantHandler!!.getConstantValue<V>(keys, nullSafe, *substitutes)
         }
 
-        fun <V> getConstantValue(keys: Array<String>, nullSafe: Boolean, substituteMap: Map<String, Any>): V {
+        fun <V> getConstantValue(keys: Array<String>, nullSafe: Boolean, substituteMap: Map<String, Any>): V? {
             return constantHandler!!.getConstantValue<V>(keys, nullSafe, substituteMap)
         }
 
-        fun <V> getConstantValue(key: String, nullSafe: Boolean, vararg substitutes: String): V {
+        fun <V> getConstantValue(key: String, nullSafe: Boolean, vararg substitutes: String): V? {
             return constantHandler!!.getConstantValue<V>(key, nullSafe, *substitutes)
         }
 
-        fun <V> getConstantValue(key: String, nullSafe: Boolean, substituteMap: Map<String, Any>): V {
+        fun <V> getConstantValue(key: String, nullSafe: Boolean, substituteMap: Map<String, Any>): V? {
             return constantHandler!!.getConstantValue<V>(key, nullSafe, substituteMap)
         }
 
-        fun getConstantStringValue(keys: Array<String>, nullSafe: Boolean, vararg substitutes: String): String {
+        fun getConstantStringValue(keys: Array<String>, nullSafe: Boolean, vararg substitutes: String): String? {
             return constantHandler!!.getConstantStringValue(keys, nullSafe, *substitutes)
         }
 
-        fun getConstantStringValue(keys: Array<String>, nullSafe: Boolean, substituteMap: Map<String, Any>): String {
+        fun getConstantStringValue(keys: Array<String>, nullSafe: Boolean, substituteMap: Map<String, Any>): String? {
             return constantHandler!!.getConstantStringValue(keys, nullSafe, substituteMap)
         }
 
@@ -178,11 +178,11 @@ class SubstituteInstance : ValueSubstitutorKt {
             return constantHandler!!.getConstantStringValue(keys)
         }
 
-        fun getConstantStringValue(key: String, nullSafe: Boolean, vararg substitutes: String): String {
+        fun getConstantStringValue(key: String, nullSafe: Boolean, vararg substitutes: String): String? {
             return constantHandler!!.getConstantStringValue(key, nullSafe, *substitutes)
         }
 
-        fun getConstantStringValue(key: String, nullSafe: Boolean, substituteMap: Map<String, Any>): String {
+        fun getConstantStringValue(key: String, nullSafe: Boolean, substituteMap: Map<String, Any>): String? {
             return constantHandler!!.getConstantStringValue(key, nullSafe, substituteMap)
         }
 
