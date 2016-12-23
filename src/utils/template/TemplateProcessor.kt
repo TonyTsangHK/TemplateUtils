@@ -292,7 +292,7 @@ class TemplateProcessor @JvmOverloads constructor(
             TemplateTag.SUBVARIABLE -> substituteSubVariable(instance, hdl, variableMap)
             TemplateTag.BRREPLACE -> substituteVariableReplaceNewLineToBr(instance, hdl, variableMap)
             TemplateTag.NLREPLACE -> substituteVariableReplaceBrToNewLine(instance, hdl, variableMap)
-            TemplateTag.FUNCTION -> substituteFunctionOutput(instance, hdl)
+            TemplateTag.FUNCTION -> substituteFunctionOutput(instance, hdl, variableMap)
             TemplateTag.ARITHMETIC -> substituteArithmaticOutput(instance, hdl, variableMap)
             TemplateTag.REPEAT -> substituteRepeatingContent(instance, hdl, variableMap)
             TemplateTag.INCLUDE -> includeContent(instance, hdl, variableMap)
@@ -547,7 +547,7 @@ class TemplateProcessor @JvmOverloads constructor(
 
     @Throws(IOException::class)
     private fun substituteFunctionOutput(
-            instance: ValueSubstitutor?, hdl: CharacterStreamHandler
+        instance: ValueSubstitutor?, hdl: CharacterStreamHandler, variableMap: Map<String, Any>?
     ) {
         val functionDescriptorString = readTagContent(hdl, TemplateTag.FUNCTION)
 
@@ -592,9 +592,25 @@ class TemplateProcessor @JvmOverloads constructor(
 
         if (clz != null) {
             var targetMethod: Method? = null
-            val paramMap = if (functionDescriptor.containsKey("paramMap")) functionDescriptor["paramMap"] as Map<String, Any> else null
+            val paramMap = if (functionDescriptor.containsKey("paramMap")) functionDescriptor["paramMap"] as MutableMap<String, Any> else null
+            
+            if (paramMap != null) {
+                for ((key, value) in paramMap) {
+                    if (value is String) {
+                        paramMap[key] = substituteInlineContent(value, instance, variableMap);
+                    }
+                }
+            }
 
-            val paramList = if (functionDescriptor.containsKey("params")) functionDescriptor["params"] as List<Any> else null
+            val paramList = if (functionDescriptor.containsKey("params")) functionDescriptor["params"] as MutableList<Any> else null
+            
+            if (paramList != null) {
+                for (i in paramList.indices) {
+                    if (paramList[i] is String) {
+                        paramList[i] = substituteInlineContent(paramList[i] as String, instance, variableMap)
+                    }
+                }
+            } 
 
             val methodName = functionDescriptor["method"] as String
 
