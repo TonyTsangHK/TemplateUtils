@@ -7,6 +7,7 @@ import utils.template.constant.ConstantHandler
 import org.apache.commons.lang3.StringEscapeUtils
 import org.slf4j.LoggerFactory
 import utils.data.DataManipulator
+import utils.extensions.type.getString
 import utils.formula.parser.SimpleFormulaParser
 import utils.json.parser.JsonFormatter
 import utils.json.parser.JsonParser
@@ -293,7 +294,7 @@ class TemplateProcessor @JvmOverloads constructor(
             TemplateTag.BRREPLACE -> substituteVariableReplaceNewLineToBr(instance, hdl, variableMap)
             TemplateTag.NLREPLACE -> substituteVariableReplaceBrToNewLine(instance, hdl, variableMap)
             TemplateTag.FUNCTION -> substituteFunctionOutput(instance, hdl, variableMap)
-            TemplateTag.ARITHMETIC -> substituteArithmaticOutput(instance, hdl, variableMap)
+            TemplateTag.ARITHMETIC -> substituteArithmeticOutput(instance, hdl, variableMap)
             TemplateTag.REPEAT -> substituteRepeatingContent(instance, hdl, variableMap)
             TemplateTag.INCLUDE -> includeContent(instance, hdl, variableMap)
             TemplateTag.COMMENT -> skipComment(hdl)
@@ -442,7 +443,7 @@ class TemplateProcessor @JvmOverloads constructor(
 
         val contentMap = JsonParser.getInstance().parseMap<Any>(content)
 
-        if (contentMap != null && contentMap.size > 0 && contentMap.containsKey("key")) {
+        if (contentMap != null && contentMap.isNotEmpty() && contentMap.containsKey("key")) {
             val key = DataManipulator.getStringValue(contentMap, "key", "")!!
 
             var keyContent = extractStringValue(key, instance, variableMap)
@@ -455,7 +456,7 @@ class TemplateProcessor @JvmOverloads constructor(
 
                     substitute = substituteInlineContent(substitute, instance, variableMap)
 
-                    keyContent = keyContent.replace("\\{$i\\}".toRegex(), substitute)
+                    keyContent = keyContent.replace(Regex("\\{$i\\}"), substitute)
                 }
             }
 
@@ -578,11 +579,11 @@ class TemplateProcessor @JvmOverloads constructor(
             } catch (e: ClassNotFoundException) {
                 clz = null
                 invokeInstance = null
-                LOGGER.error("Class not found, className: " + (functionDescriptor as java.util.Map<String, Any>).getOrDefault("className", ""), e)
+                LOGGER.error("Class not found, className: " + (functionDescriptor as Map<String, Any>).getString("className", ""), e)
             } catch (e: NullPointerException) {
                 clz = null
                 invokeInstance = null
-                LOGGER.error("Class not found, className: " + (functionDescriptor as java.util.Map<String, Any>).getOrDefault("className", ""), e)
+                LOGGER.error("Class not found, className: " + (functionDescriptor as Map<String, Any>).getString("className", ""), e)
             }
 
         } else {
@@ -707,7 +708,7 @@ class TemplateProcessor @JvmOverloads constructor(
     }
 
     @Throws(IOException::class)
-    private fun substituteArithmaticOutput(
+    private fun substituteArithmeticOutput(
         instance: ValueSubstitutor?, hdl: CharacterStreamHandler, variableMap: Map<String, Any>?
     ) {
         val content = readTagContent(hdl, TemplateTag.ARITHMETIC)
@@ -717,12 +718,8 @@ class TemplateProcessor @JvmOverloads constructor(
         val formula = SimpleFormulaParser.parseFormula(formulaExpression)
 
         val result = formula.compute()
-
-        if (result != null) {
-            builder.append(result.toString())
-        } else {
-            LOGGER.error("Failed to compute formula result, formula expression: " + formulaExpression)
-        }
+        
+        builder.append(result.toString())
     }
 
     @Throws(IOException::class)
@@ -1000,7 +997,7 @@ class TemplateProcessor @JvmOverloads constructor(
 
     @JvmOverloads 
     fun appendResourceContent(
-        reader: Reader?, variableMap: Map<String, Any> = null as Map<String, Any>
+        reader: Reader?, variableMap: Map<String, Any>? = null as Map<String, Any>?
     ): TemplateProcessor {
         if (reader != null) {
             try {
@@ -1017,7 +1014,7 @@ class TemplateProcessor @JvmOverloads constructor(
 
     @JvmOverloads 
     fun appendResourceContent(
-        resourceStream: InputStream?, variableMap: Map<String, Any> = null as Map<String, Any>
+        resourceStream: InputStream?, variableMap: Map<String, Any>? = null as Map<String, Any>?
     ): TemplateProcessor {
         if (resourceStream != null) {
             return appendResourceContent(InputStreamReader(resourceStream, Charset.forName("UTF-8")), variableMap)
