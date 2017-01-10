@@ -35,10 +35,22 @@ class ConstantHandler: ValueSubstitutorKt {
 
     private var resourceVersion: Long = -1
 
-    @JvmOverloads constructor(clz: Class<*>, resourceName: String, overrideResources: List<String>? = null) {
+    constructor(clz: Class<*>, resourceName: String, vararg overrideResources: String) {
         this.clz = clz
         this.resourceName = resourceName
-        if (overrideResources != null && overrideResources.size > 0) {
+        if (overrideResources.isNotEmpty()) {
+            this.overrideResources = listOf(*overrideResources)
+        } else {
+            this.overrideResources = null
+        }
+        this.overrideConstantMap = null
+    }
+    
+    @JvmOverloads 
+    constructor(clz: Class<*>, resourceName: String, overrideResources: List<String>? = null) {
+        this.clz = clz
+        this.resourceName = resourceName
+        if (overrideResources != null && overrideResources.isNotEmpty()) {
             this.overrideResources = overrideResources
         } else {
             this.overrideResources = null
@@ -46,10 +58,11 @@ class ConstantHandler: ValueSubstitutorKt {
         this.overrideConstantMap = null
     }
 
-    @JvmOverloads constructor(classLoader: ClassLoader, resourceName: String, overrideResources: List<String>? = null) {
+    @JvmOverloads 
+    constructor(classLoader: ClassLoader, resourceName: String, overrideResources: List<String>? = null) {
         this.classLoader = classLoader
         this.resourceName = resourceName
-        if (overrideResources != null && overrideResources.size > 0) {
+        if (overrideResources != null && overrideResources.isNotEmpty()) {
             this.overrideResources = overrideResources
         } else {
             this.overrideResources = null
