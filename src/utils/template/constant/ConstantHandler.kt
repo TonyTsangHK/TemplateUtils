@@ -127,6 +127,7 @@ class ConstantHandler: ValueSubstitutorKt {
 
                 processOverrideConstantMap()
             }
+            mapPreprocess(constantMap as MutableMap<String, Any?>)
         } else {
             loadResource()
         }
