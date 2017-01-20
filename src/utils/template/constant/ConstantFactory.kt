@@ -1,6 +1,7 @@
 package utils.template.constant
 
 import utils.string.StringUtil
+import utils.template.ResourceLoader
 import utils.template.ValueSubstitutor
 
 import java.util.HashMap
@@ -13,10 +14,10 @@ import java.util.HashMap
  */
 object ConstantFactory {
     private val constantHandlerMap = HashMap<String, ConstantHandler>()
-
+    
     fun getConstantHandler(resourceName: String): ConstantHandler? {
-        val k = "_" + resourceName
-
+        val k = "_$resourceName"
+        
         var handler: ConstantHandler? = constantHandlerMap[k]
 
         if (handler == null) {
@@ -33,7 +34,7 @@ object ConstantFactory {
         val hdl = getConstantHandler(resourceName)
 
         if (hdl != null) {
-            hdl.setParentConstantHalder(parentConstantHandler)
+            hdl.setParentConstantHandler(parentConstantHandler)
             return hdl
         } else {
             return null
@@ -41,31 +42,63 @@ object ConstantFactory {
     }
 
     fun getConstantHandler(clz: Class<*>, resourceName: String): ConstantHandler? {
-        val k = clz.name + "_" + resourceName
+        val k = "${clz.name}_$resourceName"
 
         var handler: ConstantHandler? = constantHandlerMap[k]
 
         if (handler == null) {
             if (clz.getResource(resourceName) != null) {
                 handler = ConstantHandler(clz, resourceName)
-                constantHandlerMap.put(k, handler)
+                constantHandlerMap[k] = handler
             }
         }
 
         return handler
     }
     
+    fun getConstantHandler(resourceLoader: ResourceLoader, resourceName: String): ConstantHandler? {
+        val k = "${System.identityHashCode(resourceLoader)}_$resourceName"
+        
+        var handler = constantHandlerMap[k]
+        
+        if (handler == null) {
+            if (resourceLoader.getResource(resourceName) != null) {
+                handler = ConstantHandler(resourceLoader, resourceName)
+                constantHandlerMap[k] = handler
+            }
+        }
+        
+        return handler
+    }
+    
     fun getConstantHandler(
         clz: Class<*>, resourceName: String, vararg overrideResources: String
     ): ConstantHandler? {
-        val k = clz.name + "_" + resourceName + "+" + StringUtil.join(",", overrideResources)
+        val k = "${clz.name}_$resourceName+${StringUtil.join(",", overrideResources)}"
         
-        var handler: ConstantHandler? = constantHandlerMap[k]
+        var handler = constantHandlerMap[k]
         
         if (handler == null) {
             if (clz.getResource(resourceName) != null) {
                 handler = ConstantHandler(clz, resourceName, *overrideResources)
-                constantHandlerMap.put(k, handler)
+                constantHandlerMap[k] = handler
+            }
+        }
+        
+        return handler
+    }
+    
+    fun getConstantHandler(
+        resourceLoader: ResourceLoader, resourceName: String, vararg overrideResources: String
+    ): ConstantHandler? {
+        val k = "${System.identityHashCode(resourceLoader)}_$resourceName+${StringUtil.join(",", overrideResources)}"
+        
+        var handler = constantHandlerMap[k]
+        
+        if (handler == null) {
+            if (resourceLoader.getResource(resourceName) != null) {
+                handler = ConstantHandler(resourceLoader, resourceName, *overrideResources)
+                constantHandlerMap[k] = handler
             }
         }
         
@@ -75,31 +108,56 @@ object ConstantFactory {
     fun getConstantHandler(
         clz: Class<*>, resourceName: String, overrideResources: List<String>
     ): ConstantHandler? {
-        val k = clz.name + "_" + resourceName + "+" + StringUtil.join(",", overrideResources)
+        val k = "${clz.name}_$resourceName+${StringUtil.join(",", overrideResources)}"
 
-        var handler: ConstantHandler? = constantHandlerMap[k]
+        var handler = constantHandlerMap[k]
 
         if (handler == null) {
             if (clz.getResource(resourceName) != null) {
                 handler = ConstantHandler(clz, resourceName, overrideResources)
-                constantHandlerMap.put(k, handler)
+                constantHandlerMap[k] = handler
             }
         }
 
         return handler
     }
+    
+    fun getConstantHandler(
+        resourceLoader: ResourceLoader, resourceName: String, overrideResources: List<String>
+    ): ConstantHandler? {
+        // use resource object id as part of key
+        val k = "${System.identityHashCode(resourceLoader)}_$resourceName"
+        
+        var handler = constantHandlerMap[k]
+        
+        if (handler == null) {
+            if (resourceLoader.getResource(resourceName) != null) {
+                handler = ConstantHandler(resourceLoader, resourceName, overrideResources)
+                constantHandlerMap[k] = handler
+            }
+        }
+        
+        return handler
+    }
 
     fun getConstantHandler(
-            parentConstantHandler: ConstantHandler, clz: Class<*>, resourceName: String
+        parentConstantHandler: ConstantHandler, clz: Class<*>, resourceName: String
     ): ConstantHandler? {
         val hdl = getConstantHandler(clz, resourceName)
-
-        if (hdl != null) {
-            hdl.setParentConstantHalder(parentConstantHandler)
-            return hdl
-        } else {
-            return null
-        }
+        
+        hdl?.setParentConstantHandler(parentConstantHandler)
+        
+        return hdl
+    }
+    
+    fun getConstantHandler(
+        parentConstantHandler: ConstantHandler, resourceLoader: ResourceLoader, resourceName: String
+    ): ConstantHandler? {
+        val hdl = getConstantHandler(resourceLoader, resourceName)
+        
+        hdl?.setParentConstantHandler(parentConstantHandler)
+        
+        return hdl
     }
     
     fun getConstantHandler(
@@ -108,12 +166,19 @@ object ConstantFactory {
     ): ConstantHandler? {
         val hdl = getConstantHandler(clz, resourceName, *overrideResources)
         
-        if (hdl != null) {
-            hdl.setParentConstantHalder(parentConstantHandler)
-            return hdl
-        } else {
-            return null
-        }
+        hdl?.setParentConstantHandler(parentConstantHandler)
+        
+        return hdl
+    }
+    
+    fun getConstantHandler(
+        parentConstantHandler: ConstantHandler, resourceLoader: ResourceLoader, resourceName: String, vararg overrideResources: String
+    ): ConstantHandler? {
+        val hdl = getConstantHandler(resourceLoader, resourceName, *overrideResources)
+        
+        hdl?.setParentConstantHandler(parentConstantHandler)
+        
+        return hdl
     }
 
     fun getConstantHandler(
@@ -121,26 +186,32 @@ object ConstantFactory {
         overrideResources: List<String>
     ): ConstantHandler? {
         val hdl = getConstantHandler(clz, resourceName, overrideResources)
+        
+        hdl?.setParentConstantHandler(parentConstantHandler)
+        
+        return hdl
+    }
+    
+    fun getConstantHandler(
+        parentConstantHandler: ConstantHandler, resourceLoader: ResourceLoader, resourceName: String,
+        overrideResources: List<String>
+    ): ConstantHandler? {
+        val hdl = getConstantHandler(resourceLoader, resourceName, overrideResources)
 
-        if (hdl != null) {
-            hdl.setParentConstantHalder(parentConstantHandler)
-            return hdl
-        } else {
-            return null
-        }
+        hdl?.setParentConstantHandler(parentConstantHandler)
+        
+        return hdl
     }
 
-    fun getConstantHandler(
-            clz: Class<out ValueSubstitutor>): ConstantHandler? {
+    fun getConstantHandler(clz: Class<out ValueSubstitutor>): ConstantHandler? {
         return getConstantHandler(clz, "def.json")
     }
 
-    fun getConstantHandler(
-            parentConstantHandler: ConstantHandler, clz: Class<out ValueSubstitutor>): ConstantHandler? {
+    fun getConstantHandler(parentConstantHandler: ConstantHandler, clz: Class<out ValueSubstitutor>): ConstantHandler? {
         val hdl = getConstantHandler(clz)
 
         if (hdl != null) {
-            hdl.setParentConstantHalder(parentConstantHandler)
+            hdl.setParentConstantHandler(parentConstantHandler)
             return hdl
         } else {
             return null

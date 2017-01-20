@@ -5,6 +5,7 @@ import utils.string.StringUtil
 import utils.file.FileUtil
 import utils.json.parser.JsonParser
 import utils.math.MathUtil
+import utils.template.ResourceLoader
 import utils.template.ValueSubstitutorKt
 
 import java.io.File
@@ -25,9 +26,11 @@ class ConstantHandler: ValueSubstitutorKt {
 
     private var clz: Class<*>? = null
 
-    private var parentConstantHalder: ConstantHandler? = null
+    private var parentConstantHandler: ConstantHandler? = null
 
     private var classLoader: ClassLoader? = null
+    private var resourceLoader: ResourceLoader? = null
+    
     private var resourceName: String? = null
     private var overrideResources: List<String>? = null
 
@@ -37,6 +40,28 @@ class ConstantHandler: ValueSubstitutorKt {
 
     constructor(clz: Class<*>, resourceName: String, vararg overrideResources: String) {
         this.clz = clz
+        this.resourceName = resourceName
+        if (overrideResources.isNotEmpty()) {
+            this.overrideResources = listOf(*overrideResources)
+        } else {
+            this.overrideResources = null
+        }
+        this.overrideConstantMap = null
+    }
+    
+    constructor(classLoader: ClassLoader, resourceName: String, vararg overrideResources: String) {
+        this.classLoader = classLoader
+        this.resourceName = resourceName
+        if (overrideResources.isNotEmpty()) {
+            this.overrideResources = listOf(*overrideResources)
+        } else {
+            this.overrideResources = null
+        }
+        this.overrideConstantMap = null
+    }
+    
+    constructor(resourceLoader: ResourceLoader, resourceName: String, vararg overrideResources: String) {
+        this.resourceLoader = resourceLoader
         this.resourceName = resourceName
         if (overrideResources.isNotEmpty()) {
             this.overrideResources = listOf(*overrideResources)
@@ -69,17 +94,34 @@ class ConstantHandler: ValueSubstitutorKt {
         }
         this.overrideConstantMap = null
     }
+    
+    @JvmOverloads
+    constructor(resourceLoader: ResourceLoader, resourceName: String, overrideResources: List<String>? = null) {
+        this.resourceLoader = resourceLoader
+        this.resourceName = resourceName
+        if (overrideResources != null && overrideResources.isNotEmpty()) {
+            this.overrideResources = overrideResources
+        } else {
+            this.overrideResources
+        }
+        this.overrideConstantMap = null
+    }
 
-    fun setParentConstantHalder(parentConstantHalder: ConstantHandler) {
-        this.parentConstantHalder = parentConstantHalder
+    fun setParentConstantHandler(parentConstantHandler: ConstantHandler) {
+        this.parentConstantHandler = parentConstantHandler
     }
 
     private fun safeGetResourceContent(resourceName: String): String {
         val url: URL
         if (clz != null) {
             url = clz!!.getResource(resourceName)
-        } else {
+        } else if (classLoader != null){
             url = classLoader!!.getResource(resourceName)
+        } else if (resourceLoader != null) {
+            url = resourceLoader!!.getResource(resourceName)!!
+        } else {
+            // Not expected, if happened just return an empty string
+            return ""
         }
 
         val resourceFile = File(url.file)
@@ -91,10 +133,17 @@ class ConstantHandler: ValueSubstitutorKt {
                 val stream = clz!!.getResourceAsStream(resourceName)
                 result = FileUtil.getFileContent(stream, "UTF-8")
                 FileUtil.safeClose(stream)
-            } else {
+            } else if (classLoader != null) {
                 val stream = classLoader!!.getResourceAsStream(resourceName)
                 result = FileUtil.getFileContent(stream, "UTF-8")
                 FileUtil.safeClose(stream)
+            } else if (resourceLoader != null) {
+                val stream = resourceLoader!!.getResourceAsStream(resourceName)
+                result = FileUtil.getFileContent(stream, "UTF-8")
+                FileUtil.safeClose(stream)
+            } else {
+                // Not expected, set result to an empty string
+                result = ""
             }
         } else {
             result = FileUtil.getFileContent(resourceFile)
@@ -104,32 +153,45 @@ class ConstantHandler: ValueSubstitutorKt {
     }
 
     private fun ensureResources() {
-        val url: URL
+        val url: URL?
+        
         if (clz != null) {
             url = clz!!.getResource(resourceName)
-        } else {
+        } else if (classLoader != null) {
             url = classLoader!!.getResource(resourceName)
+        } else if (resourceLoader != null) {
+            url = resourceLoader!!.getResource(resourceName!!)!!
+        } else {
+            url = null
         }
 
-        resourceFile = File(url.file)
+        if (url != null) {
+            resourceFile = File(url.file)
 
-        if (!resourceFile!!.exists()) {
-            if (clz != null) {
-                val stream = clz!!.getResourceAsStream(resourceName)
-                constantMap = JsonParser.getInstance().parseMap<Any>(FileUtil.getFileContent(stream, "UTF-8"))
-                FileUtil.safeClose(stream)
+            if (!resourceFile!!.exists()) {
+                if (clz != null) {
+                    val stream = clz!!.getResourceAsStream(resourceName)
+                    constantMap = JsonParser.getInstance().parseMap<Any>(FileUtil.getFileContent(stream, "UTF-8"))
+                    FileUtil.safeClose(stream)
 
-                processOverrideConstantMap()
+                    processOverrideConstantMap()
+                } else if (classLoader != null) {
+                    val stream = classLoader!!.getResourceAsStream(resourceName)
+                    constantMap = JsonParser.getInstance().parseMap<Any>(FileUtil.getFileContent(stream, "UTF-8"))
+                    FileUtil.safeClose(stream)
+
+                    processOverrideConstantMap()
+                } else if (resourceLoader != null) {
+                    val stream = resourceLoader!!.getResourceAsStream(resourceName!!)
+                    constantMap = JsonParser.getInstance().parseMap<Any>(FileUtil.getFileContent(stream, "UTF-8"))
+                    FileUtil.safeClose(stream)
+                    
+                    processOverrideConstantMap()
+                }
+                mapPreprocess(constantMap as MutableMap<String, Any?>)
             } else {
-                val stream = classLoader!!.getResourceAsStream(resourceName)
-                constantMap = JsonParser.getInstance().parseMap<Any>(FileUtil.getFileContent(stream, "UTF-8"))
-                FileUtil.safeClose(stream)
-
-                processOverrideConstantMap()
+                loadResource()
             }
-            mapPreprocess(constantMap as MutableMap<String, Any?>)
-        } else {
-            loadResource()
         }
     }
 
@@ -305,8 +367,8 @@ class ConstantHandler: ValueSubstitutorKt {
                 return v as V
             }
         } else {
-            if (parentConstantHalder != null) {
-                return parentConstantHalder!!.getConstantValue<V>(keys, nullSafe, *substitutes)
+            if (parentConstantHandler != null) {
+                return parentConstantHandler!!.getConstantValue<V>(keys, nullSafe, *substitutes)
             } else {
                 return (if (nullSafe) "" else null) as V
             }
@@ -346,8 +408,8 @@ class ConstantHandler: ValueSubstitutorKt {
                 return v as V
             }
         } else {
-            if (parentConstantHalder != null) {
-                return parentConstantHalder!!.getConstantValue<V>(keys, nullSafe, substituteMap)
+            if (parentConstantHandler != null) {
+                return parentConstantHandler!!.getConstantValue<V>(keys, nullSafe, substituteMap)
             } else {
                 return (if (nullSafe) "" else null) as V
             }
