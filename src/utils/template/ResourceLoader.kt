@@ -10,13 +10,14 @@ import java.net.URL
  * Time: 09:43
  */
 class ResourceLoader(parentResourcePath: String?) {
-    private var parentResourcePath: String? = null
+    var parentResourcePath: String? = null
+        private set(value) {
+            field = value
+        }
 
-    constructor(clazz: Class<*>) : this(clazz.`package`) {
-    }
+    constructor(clazz: Class<*>) : this(clazz.`package`)
 
-    constructor(pack: Package) : this(pack.name.replace(".", "/")) {
-    }
+    constructor(pack: Package) : this(pack.name.replace(".", "/"))
 
     init {
         if (parentResourcePath != null) {
