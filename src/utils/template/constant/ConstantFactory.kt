@@ -57,7 +57,8 @@ object ConstantFactory {
     }
     
     fun getConstantHandler(resourceLoader: ResourceLoader, resourceName: String): ConstantHandler? {
-        val k = "${System.identityHashCode(resourceLoader)}_$resourceName"
+        // use resource loader's parent resource path as part of key
+        val k = "${resourceLoader.parentResourcePath}_$resourceName"
         
         var handler = constantHandlerMap[k]
         
@@ -91,7 +92,8 @@ object ConstantFactory {
     fun getConstantHandler(
         resourceLoader: ResourceLoader, resourceName: String, vararg overrideResources: String
     ): ConstantHandler? {
-        val k = "${System.identityHashCode(resourceLoader)}_$resourceName+${StringUtil.join(",", overrideResources)}"
+        // use resource loader's parent resource path as part of key
+        val k = "${resourceLoader.parentResourcePath}_$resourceName+${StringUtil.join(",", overrideResources)}"
         
         var handler = constantHandlerMap[k]
         
@@ -125,8 +127,8 @@ object ConstantFactory {
     fun getConstantHandler(
         resourceLoader: ResourceLoader, resourceName: String, overrideResources: List<String>
     ): ConstantHandler? {
-        // use resource object id as part of key
-        val k = "${System.identityHashCode(resourceLoader)}_$resourceName"
+        // use resource loader's parent resource path as part of key
+        val k = "${resourceLoader.parentResourcePath}_$resourceName"
         
         var handler = constantHandlerMap[k]
         
