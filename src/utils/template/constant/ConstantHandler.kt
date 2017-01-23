@@ -37,6 +37,7 @@ class ConstantHandler: ValueSubstitutorKt {
     private var resourceFile: File? = null
 
     private var resourceVersion: Long = -1
+    private var resourceEditable = false
 
     constructor(clz: Class<*>, resourceName: String, vararg overrideResources: String) {
         this.clz = clz
@@ -107,7 +108,8 @@ class ConstantHandler: ValueSubstitutorKt {
         this.overrideConstantMap = null
     }
 
-    fun setParentConstantHandler(parentConstantHandler: ConstantHandler) {
+    // parentConstantHandler should be nullable, setting it to be null means clearing the parentConstantHandler
+    fun setParentConstantHandler(parentConstantHandler: ConstantHandler?) {
         this.parentConstantHandler = parentConstantHandler
     }
 
@@ -167,8 +169,13 @@ class ConstantHandler: ValueSubstitutorKt {
 
         if (url != null) {
             resourceFile = File(url.file)
-
-            if (!resourceFile!!.exists()) {
+            
+            // resourceFile.exists seems unnecessary and may raise access denied exception
+            // resourceFile != null maybe enough, since the map will be load through getResourceAsStream
+            // set resource editable to false to prevent any unintended resource file access
+            if (resourceFile != null) {
+                resourceEditable = false
+                
                 if (clz != null) {
                     val stream = clz!!.getResourceAsStream(resourceName)
                     constantMap = JsonParser.getInstance().parseMap<Any>(FileUtil.getFileContent(stream, "UTF-8"))
@@ -201,6 +208,9 @@ class ConstantHandler: ValueSubstitutorKt {
             constantMap = JsonParser.getInstance().parseMap<Any>(FileUtil.getFileContent(resourceFile))
             processOverrideConstantMap()
             mapPreprocess(constantMap as MutableMap<String, Any?>)
+            
+            // loaded from resource file, the resource file may be editable
+            resourceEditable = true
         }
     }
 
@@ -243,8 +253,9 @@ class ConstantHandler: ValueSubstitutorKt {
     private fun ensureConstantMap() {
         if (constantMap == null) {
             ensureResources()
-        } else if (resourceFile != null && resourceFile!!.exists()) {
-            if (resourceFile!!.lastModified() != resourceVersion) {
+        } else {
+            // Only check for modification version if resource file is editable
+            if (resourceFile != null && resourceEditable && resourceFile!!.lastModified() != resourceVersion) {
                 loadResource()
             }
         }
@@ -335,7 +346,7 @@ class ConstantHandler: ValueSubstitutorKt {
     
     fun <V> getConstantValue(keys: Array<String>, nullSafe: Boolean, vararg substitutes: String): V? {
         ensureConstantMap()
-
+        
         var cmap: MutableMap<String, Any?>? = constantMap
 
         var k: String
@@ -444,8 +455,10 @@ class ConstantHandler: ValueSubstitutorKt {
         }
     }
 
-    fun getConstantStringValue(keys: Array<String>): String {
-        return getConstantStringValue(keys)
+    fun getConstantStringValue(keys: Array<String>): String? {
+        val v = getConstantStringValue(keys, false)
+        
+        return if (v != null) v.toString() else v
     }
 
     fun getConstantStringValue(key: String, nullSafe: Boolean, vararg substitutes: String): String? {
