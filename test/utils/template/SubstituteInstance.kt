@@ -174,7 +174,7 @@ class SubstituteInstance : ValueSubstitutorKt {
             return constantHandler!!.getConstantStringValue(keys, nullSafe, substituteMap)
         }
 
-        fun getConstantStringValue(keys: Array<String>): String {
+        fun getConstantStringValue(keys: Array<String>): String? {
             return constantHandler!!.getConstantStringValue(keys)
         }
 

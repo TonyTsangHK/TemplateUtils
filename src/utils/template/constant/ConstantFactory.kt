@@ -29,16 +29,13 @@ object ConstantFactory {
 
         return handler
     }
-
-    fun getConstantHandler(parentConstantHandler: ConstantHandler, resourceName: String): ConstantHandler? {
+    
+    fun getConstantHandler(parentConstantHandler: ConstantHandler?, resourceName: String): ConstantHandler? {
         val hdl = getConstantHandler(resourceName)
 
-        if (hdl != null) {
-            hdl.setParentConstantHandler(parentConstantHandler)
-            return hdl
-        } else {
-            return null
-        }
+        hdl?.setParentConstantHandler(parentConstantHandler)
+        
+        return hdl
     }
 
     fun getConstantHandler(clz: Class<*>, resourceName: String): ConstantHandler? {
@@ -143,7 +140,7 @@ object ConstantFactory {
     }
 
     fun getConstantHandler(
-        parentConstantHandler: ConstantHandler, clz: Class<*>, resourceName: String
+        parentConstantHandler: ConstantHandler?, clz: Class<*>, resourceName: String
     ): ConstantHandler? {
         val hdl = getConstantHandler(clz, resourceName)
         
@@ -153,7 +150,7 @@ object ConstantFactory {
     }
     
     fun getConstantHandler(
-        parentConstantHandler: ConstantHandler, resourceLoader: ResourceLoader, resourceName: String
+        parentConstantHandler: ConstantHandler?, resourceLoader: ResourceLoader, resourceName: String
     ): ConstantHandler? {
         val hdl = getConstantHandler(resourceLoader, resourceName)
         
@@ -184,7 +181,7 @@ object ConstantFactory {
     }
 
     fun getConstantHandler(
-        parentConstantHandler: ConstantHandler, clz: Class<*>, resourceName: String,
+        parentConstantHandler: ConstantHandler?, clz: Class<*>, resourceName: String,
         overrideResources: List<String>
     ): ConstantHandler? {
         val hdl = getConstantHandler(clz, resourceName, overrideResources)
@@ -195,7 +192,7 @@ object ConstantFactory {
     }
     
     fun getConstantHandler(
-        parentConstantHandler: ConstantHandler, resourceLoader: ResourceLoader, resourceName: String,
+        parentConstantHandler: ConstantHandler?, resourceLoader: ResourceLoader, resourceName: String,
         overrideResources: List<String>
     ): ConstantHandler? {
         val hdl = getConstantHandler(resourceLoader, resourceName, overrideResources)
@@ -209,7 +206,7 @@ object ConstantFactory {
         return getConstantHandler(clz, "def.json")
     }
 
-    fun getConstantHandler(parentConstantHandler: ConstantHandler, clz: Class<out ValueSubstitutor>): ConstantHandler? {
+    fun getConstantHandler(parentConstantHandler: ConstantHandler?, clz: Class<out ValueSubstitutor>): ConstantHandler? {
         val hdl = getConstantHandler(clz)
 
         if (hdl != null) {
