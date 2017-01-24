@@ -12,6 +12,7 @@ import java.io.File
 import java.io.IOException
 import java.math.BigDecimal
 import java.net.URL
+import java.security.AccessControlException
 import java.util.*
 
 /**
@@ -168,12 +169,27 @@ class ConstantHandler: ValueSubstitutorKt {
         }
 
         if (url != null) {
-            resourceFile = File(url.file)
+            val localResourceFile = File(url.file)
+            resourceFile = localResourceFile
+
+            var resourceAccessibleAndExist = false
             
-            // resourceFile.exists seems unnecessary and may raise access denied exception
-            // resourceFile != null maybe enough, since the map will be load through getResourceAsStream
-            // set resource editable to false to prevent any unintended resource file access
-            if (resourceFile != null) {
+            // Properly check for accessibility of the underlying resource file.
+            try {
+                resourceAccessibleAndExist = localResourceFile.exists()
+            } catch (e : Exception) {
+                if (e is AccessControlException || e is AccessDeniedException) {
+                    // Access denied for the resource file, this is most probably caused by resource within jar
+                    // Set accessible and exist flag to false
+                    resourceAccessibleAndExist = false
+                } else {
+                    // Unexpected exception, throw the exception
+                    throw e
+                }
+            }
+            
+            // resource file inaccessible through file access method, initialize through getResourceAsStream from appropriate loader.
+            if (!resourceAccessibleAndExist) {
                 resourceEditable = false
                 
                 if (clz != null) {
