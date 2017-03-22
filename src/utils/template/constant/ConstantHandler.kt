@@ -647,15 +647,15 @@ class ConstantHandler: ValueSubstitutorKt {
         return getConstantStringValue(key, false, substitutionMap)
     }
 
-    override fun variable(vararg keys: String): String? {
-        if (keys.size == 0) {
+    override fun variable(vararg keys: String): String {
+        if (keys.isEmpty()) {
             return ""
         } else if (keys.size == 1) {
-            return getVariableStringValue(keys[0])
+            return getVariableStringValue(keys[0], true)!!
         } else {
             val substitutes = Array<String>(keys.size-1, { keys[it+1] })
 
-            return getVariableStringValue(keys[0], *substitutes)
+            return getVariableStringValue(keys[0], true, *substitutes)!!
         }
     }
 }
