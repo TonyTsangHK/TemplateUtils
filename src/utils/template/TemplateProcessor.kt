@@ -236,27 +236,33 @@ class TemplateProcessor @JvmOverloads constructor(
     ): Map<String, Any> {
         val jsonParser = JsonParser.getInstance()
 
+        val resultMap = HashMap<String, Any>()
+        
         val paramMap = jsonParser.parseMap<Any>(paramString)
 
-        if (paramMap.containsKey("start")) {
-            val startObj = paramMap["start"]
+        if (paramMap != null) {
+            resultMap.putAll(paramMap)
+            
+            if (resultMap.containsKey("start")) {
+                val startObj = resultMap["start"]
 
-            if (startObj != null && startObj is String) {
-                paramMap["start"] =
-                    MathUtil.parseInt(substituteInlineContent(startObj, instance, variableMap), 10, 0)
+                if (startObj != null && startObj is String) {
+                    resultMap["start"] =
+                        MathUtil.parseInt(substituteInlineContent(startObj, instance, variableMap), 10, 0)
+                }
+            }
+
+            if (resultMap.containsKey("length")) {
+                val lengthObj = resultMap["length"]
+
+                if (lengthObj != null && lengthObj is String) {
+                    resultMap["length"] =
+                        MathUtil.parseInt(substituteInlineContent(lengthObj, instance, variableMap), 10, 0)
+                }
             }
         }
-
-        if (paramMap.containsKey("length")) {
-            val lengthObj = paramMap["length"]
-
-            if (lengthObj != null && lengthObj is String) {
-                paramMap["length"] =
-                    MathUtil.parseInt(substituteInlineContent(lengthObj, instance, variableMap), 10, 0)
-            }
-        }
-
-        return paramMap
+        
+        return resultMap
     }
 
     @Throws(IOException::class)
@@ -347,9 +353,9 @@ class TemplateProcessor @JvmOverloads constructor(
             val formatter = JsonFormatter.getInstance()
 
             if (v is Map<*, *>) {
-                return formatter.format(v as Map<String, *>?)
+                return formatter.format(v as Map<String, Any?>)
             } else if (v is List<*>) {
-                return formatter.format(v as List<*>?)
+                return formatter.format(v as List<Any?>)
             } else {
                 return v.toString()
             }
@@ -394,9 +400,9 @@ class TemplateProcessor @JvmOverloads constructor(
             val jsonFormatter = JsonFormatter.getInstance()
 
             if (v is Map<*, *>) {
-                builder.append(replaceNewLIneToBr(jsonFormatter.format(v as Map<String, *>?)))
+                builder.append(replaceNewLIneToBr(jsonFormatter.format(v as Map<String, Any?>)))
             } else if (v is List<*>) {
-                builder.append(replaceNewLIneToBr(jsonFormatter.format(v as List<*>?)))
+                builder.append(replaceNewLIneToBr(jsonFormatter.format(v as List<Any?>)))
             } else {
                 builder.append(replaceNewLIneToBr(v.toString()))
             }
@@ -421,9 +427,9 @@ class TemplateProcessor @JvmOverloads constructor(
             val formatter = JsonFormatter.getInstance()
 
             if (v is Map<*, *>) {
-                builder.append(replaceBrToNewLine(formatter.format(v as Map<String, *>?)))
+                builder.append(replaceBrToNewLine(formatter.format(v as Map<String, Any?>)))
             } else if (v is List<*>) {
-                builder.append(replaceBrToNewLine(formatter.format(v as List<*>?)))
+                builder.append(replaceBrToNewLine(formatter.format(v as List<Any?>)))
             } else {
                 builder.append(replaceBrToNewLine(v.toString()))
             }
@@ -495,9 +501,9 @@ class TemplateProcessor @JvmOverloads constructor(
             val formatter = JsonFormatter.getInstance()
 
             if (v is Map<*, *>) {
-                builder.append(formatter.format(v as Map<String, *>?))
+                builder.append(formatter.format(v as Map<String, Any?>))
             } else if (v is List<*>) {
-                builder.append(formatter.format(v as List<*>?))
+                builder.append(formatter.format(v as List<Any?>))
             } else {
                 builder.append(v.toString())
             }
@@ -553,7 +559,7 @@ class TemplateProcessor @JvmOverloads constructor(
     ) {
         val functionDescriptorString = readTagContent(hdl, TemplateTag.FUNCTION)
 
-        val functionDescriptor = JsonParser.getInstance().parseMap<Any>(functionDescriptorString)
+        val functionDescriptor = JsonParser.getInstance().parseMap<Any>(functionDescriptorString)!!
 
         var clz: Class<*>?
 
@@ -655,9 +661,9 @@ class TemplateProcessor @JvmOverloads constructor(
                         var output: String
 
                         if (v is Map<*, *>) {
-                            output = formatter.format(v as Map<String, *>?)
+                            output = formatter.format(v as Map<String, Any?>)
                         } else if (v is List<*>) {
-                            output = formatter.format(v as List<*>?)
+                            output = formatter.format(v as List<Any?>)
                         } else {
                             output = v.toString()
                         }

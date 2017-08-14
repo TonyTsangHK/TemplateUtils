@@ -194,19 +194,19 @@ class ConstantHandler: ValueSubstitutorKt {
                 
                 if (clz != null) {
                     val stream = clz!!.getResourceAsStream(resourceName)
-                    constantMap = JsonParser.getInstance().parseMap<Any>(FileUtil.getFileContent(stream, "UTF-8"))
+                    constantMap = JsonParser.getInstance().parseMutableMap<Any?>(FileUtil.getFileContent(stream, "UTF-8"))
                     FileUtil.safeClose(stream)
 
                     processOverrideConstantMap()
                 } else if (classLoader != null) {
                     val stream = classLoader!!.getResourceAsStream(resourceName)
-                    constantMap = JsonParser.getInstance().parseMap<Any>(FileUtil.getFileContent(stream, "UTF-8"))
+                    constantMap = JsonParser.getInstance().parseMutableMap<Any?>(FileUtil.getFileContent(stream, "UTF-8"))
                     FileUtil.safeClose(stream)
 
                     processOverrideConstantMap()
                 } else if (resourceLoader != null) {
                     val stream = resourceLoader!!.getResourceAsStream(resourceName!!)
-                    constantMap = JsonParser.getInstance().parseMap<Any>(FileUtil.getFileContent(stream, "UTF-8"))
+                    constantMap = JsonParser.getInstance().parseMutableMap<Any?>(FileUtil.getFileContent(stream, "UTF-8"))
                     FileUtil.safeClose(stream)
                     
                     processOverrideConstantMap()
@@ -221,7 +221,7 @@ class ConstantHandler: ValueSubstitutorKt {
     private fun loadResource() {
         if (resourceFile != null && resourceFile!!.exists()) {
             resourceVersion = resourceFile!!.lastModified()
-            constantMap = JsonParser.getInstance().parseMap<Any>(FileUtil.getFileContent(resourceFile))
+            constantMap = JsonParser.getInstance().parseMutableMap<Any?>(FileUtil.getFileContent(resourceFile))
             processOverrideConstantMap()
             mapPreprocess(constantMap as MutableMap<String, Any?>)
             
