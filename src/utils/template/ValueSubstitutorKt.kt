@@ -27,6 +27,10 @@ interface ValueSubstitutorKt: ValueSubstitutor {
     override fun getVariableLongValue(keys: Array<String>, defaultValue: Long): Long
     override fun getVariableLongValue(key: String): Long
     override fun getVariableLongValue(key: String, defaultValue: Long): Long
+    override fun getVariableBooleanValue(keys: Array<String>): Boolean
+    override fun getVariableBooleanValue(keys: Array<String>, defaultValue: Boolean): Boolean
+    override fun getVariableBooleanValue(key: String): Boolean
+    override fun getVariableBooleanValue(key: String, defaultValue: Boolean): Boolean
     override fun getVariableBigDecimalValue(keys: Array<String>): BigDecimal?
     override fun getVariableBigDecimalValue(keys: Array<String>, defaultValue: BigDecimal?): BigDecimal?
     override fun getVariableBigDecimalValue(key: String): BigDecimal?

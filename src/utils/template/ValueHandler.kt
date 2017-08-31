@@ -1,5 +1,6 @@
 package utils.template
 
+import utils.data.DataManipulator
 import utils.math.MathUtil
 
 import java.math.BigDecimal
@@ -179,6 +180,24 @@ class ValueHandler @JvmOverloads constructor(private val substitutor: ValueSubst
 
     override fun getVariableLongValue(key: String, defaultValue: Long): Long {
         return getVariableLongValue(key.split(".").dropLastWhile { it.isEmpty() }.toTypedArray(), defaultValue)
+    }
+
+    override fun getVariableBooleanValue(keys: Array<String>): Boolean {
+        return getVariableBooleanValue(keys, false);
+    }
+
+    override fun getVariableBooleanValue(keys: Array<String>, defaultValue: Boolean): Boolean {
+        val v = getVariableValue<Any>(keys, false)
+        
+        return DataManipulator.extractBoolean(v, defaultValue)
+    }
+
+    override fun getVariableBooleanValue(key: String): Boolean {
+        return getVariableBooleanValue(key, false)
+    }
+
+    override fun getVariableBooleanValue(key: String, defaultValue: Boolean): Boolean {
+        return getVariableBooleanValue(key.split(".").dropLastWhile { it.isEmpty() }.toTypedArray(), defaultValue)
     }
 
     override fun getVariableBigDecimalValue(keys: Array<String>): BigDecimal {

@@ -29,6 +29,10 @@ public interface ValueSubstitutor {
     long getVariableLongValue(String[] keys, long defaultValue);
     long getVariableLongValue(String key);
     long getVariableLongValue(String key, long defaultValue);
+    boolean getVariableBooleanValue(String[] keys);
+    boolean getVariableBooleanValue(String[] keys, boolean defaultValue);
+    boolean getVariableBooleanValue(String key);
+    boolean getVariableBooleanValue(String key, boolean defaultValue);
     BigDecimal getVariableBigDecimalValue(String[] keys);
     BigDecimal getVariableBigDecimalValue(String[] keys, BigDecimal defaultValue);
     BigDecimal getVariableBigDecimalValue(String key);

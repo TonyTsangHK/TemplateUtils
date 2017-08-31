@@ -46,6 +46,22 @@ interface DummyValueSubstitutorKt : ValueSubstitutorKt {
         return 0
     }
 
+    override fun getVariableBooleanValue(keys: Array<String>): Boolean {
+        return false
+    }
+
+    override fun getVariableBooleanValue(keys: Array<String>, defaultValue: Boolean): Boolean {
+        return false
+    }
+
+    override fun getVariableBooleanValue(key: String): Boolean {
+        return false
+    }
+
+    override fun getVariableBooleanValue(key: String, defaultValue: Boolean): Boolean {
+        return false
+    }
+
     override fun getVariableBigDecimalValue(keys: Array<String>): BigDecimal {
         return BigDecimal.ZERO
     }

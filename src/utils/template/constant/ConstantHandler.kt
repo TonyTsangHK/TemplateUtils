@@ -1,5 +1,6 @@
 package utils.template.constant
 
+import utils.data.DataManipulator
 import utils.stream.CharacterStreamHandler
 import utils.string.StringUtil
 import utils.file.FileUtil
@@ -563,6 +564,10 @@ class ConstantHandler: ValueSubstitutorKt {
         return getVariableLongValue(keys, -1L)
     }
 
+    override fun getVariableBooleanValue(keys: Array<String>): Boolean {
+        return getVariableBooleanValue(keys, false)
+    }
+
     override fun getVariableBigDecimalValue(keys: Array<String>): BigDecimal {
         return getVariableBigDecimalValue(keys, BigDecimal.ZERO)!!
     }
@@ -579,6 +584,12 @@ class ConstantHandler: ValueSubstitutorKt {
         return MathUtil.parseLong(v.toString(), 10, defaultValue)
     }
 
+    override fun getVariableBooleanValue(keys: Array<String>, defaultValue: Boolean): Boolean {
+        val v = getConstantValue<Any>(keys, false)
+        
+        return DataManipulator.extractBoolean(v, defaultValue)
+    }
+
     override fun getVariableBigDecimalValue(keys: Array<String>, defaultValue: BigDecimal?): BigDecimal? {
         val v = getConstantValue<Any>(keys, false)
 
@@ -591,6 +602,10 @@ class ConstantHandler: ValueSubstitutorKt {
 
     override fun getVariableLongValue(key: String): Long {
         return getVariableLongValue(key, -1L)
+    }
+
+    override fun getVariableBooleanValue(key: String): Boolean {
+        return getVariableBooleanValue(key, false)
     }
 
     override fun getVariableBigDecimalValue(key: String): BigDecimal {
@@ -607,6 +622,12 @@ class ConstantHandler: ValueSubstitutorKt {
         val v = getConstantValue<Any>(key, false)
 
         return MathUtil.parseLong(v.toString(), 10, defaultValue)
+    }
+
+    override fun getVariableBooleanValue(key: String, defaultValue: Boolean): Boolean {
+        val v  = getConstantValue<Any>(key, false)
+        
+        return DataManipulator.extractBoolean(v, defaultValue)
     }
 
     override fun getVariableBigDecimalValue(key: String, defaultValue: BigDecimal?): BigDecimal? {

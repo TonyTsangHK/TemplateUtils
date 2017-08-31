@@ -75,6 +75,22 @@ abstract class ConstantValueSubstituteAdapter protected constructor(val constant
         return constantHandler.getVariableLongValue(key, defaultValue)
     }
 
+    override fun getVariableBooleanValue(keys: Array<String>): Boolean {
+        return constantHandler.getVariableBooleanValue(keys)
+    }
+
+    override fun getVariableBooleanValue(keys: Array<String>, defaultValue: Boolean): Boolean {
+        return constantHandler.getVariableBooleanValue(keys, defaultValue)
+    }
+
+    override fun getVariableBooleanValue(key: String): Boolean {
+        return constantHandler.getVariableBooleanValue(key)
+    }
+
+    override fun getVariableBooleanValue(key: String, defaultValue: Boolean): Boolean {
+        return constantHandler.getVariableBooleanValue(key, defaultValue)
+    }
+
     override fun getVariableBigDecimalValue(keys: Array<String>): BigDecimal {
         return constantHandler.getVariableBigDecimalValue(keys)
     }

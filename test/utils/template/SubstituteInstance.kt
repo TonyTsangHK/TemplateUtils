@@ -100,6 +100,22 @@ class SubstituteInstance : ValueSubstitutorKt {
         return constantHandler!!.getVariableLongValue(key, defaultValue)
     }
 
+    override fun getVariableBooleanValue(keys: Array<String>): Boolean {
+        return constantHandler!!.getVariableBooleanValue(keys)
+    }
+
+    override fun getVariableBooleanValue(keys: Array<String>, defaultValue: Boolean): Boolean {
+        return constantHandler!!.getVariableBooleanValue(keys, defaultValue)
+    }
+
+    override fun getVariableBooleanValue(key: String): Boolean {
+        return constantHandler!!.getVariableBooleanValue(key)
+    }
+
+    override fun getVariableBooleanValue(key: String, defaultValue: Boolean): Boolean {
+        return constantHandler!!.getVariableBooleanValue(key, defaultValue)
+    }
+
     override fun getVariableBigDecimalValue(key: String, defaultValue: BigDecimal?): BigDecimal? {
         return constantHandler!!.getVariableBigDecimalValue(key, defaultValue)
     }
@@ -108,8 +124,8 @@ class SubstituteInstance : ValueSubstitutorKt {
         return constantHandler!!.getVariableStringValue(keys, nullSafe, *substitutes)
     }
 
-    override fun getVariableStringValue(keys: Array<String>, nullSafe: Boolean, substituteMap: Map<String, Any>): String? {
-        return constantHandler!!.getVariableStringValue(keys, nullSafe, substituteMap)
+    override fun getVariableStringValue(keys: Array<String>, nullSafe: Boolean, substitutes: Map<String, Any>): String? {
+        return constantHandler!!.getVariableStringValue(keys, nullSafe, substitutes)
     }
 
     override fun getVariableStringValue(keys: Array<String>, vararg substitutes: String): String? {
