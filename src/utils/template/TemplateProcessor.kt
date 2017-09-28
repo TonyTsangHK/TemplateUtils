@@ -154,7 +154,7 @@ class TemplateProcessor @JvmOverloads constructor(
         return null
     }
     
-    fun getResourceContent(resourceLocation: String, instance: ValueSubstitutor?, variableMap: Map<String, Any>?): String? {
+    fun getResourceContent(resourceLocation: String, instance: ValueSubstitutor?, variableMap: Map<String, Any?>?): String? {
         val resourceContent = getResourceContent(resourceLocation)
 
         if (resourceContent != null) {
@@ -170,7 +170,7 @@ class TemplateProcessor @JvmOverloads constructor(
     }
     
     private fun getResourceContent(
-        hdl: CharacterStreamHandler, instance: ValueSubstitutor?, variableMap: Map<String, Any>?
+        hdl: CharacterStreamHandler, instance: ValueSubstitutor?, variableMap: Map<String, Any?>?
     ): String {
         val localBuilder = StringBuilder();
         
@@ -232,7 +232,7 @@ class TemplateProcessor @JvmOverloads constructor(
 
     @Throws(IOException::class)
     private fun readParameters(
-        paramString: String, instance: ValueSubstitutor?, variableMap: Map<String, Any>?
+        paramString: String, instance: ValueSubstitutor?, variableMap: Map<String, Any?>?
     ): Map<String, Any> {
         val jsonParser = JsonParser.getInstance()
 
@@ -293,7 +293,7 @@ class TemplateProcessor @JvmOverloads constructor(
 
     @Throws(IOException::class)
     private fun processTag(
-        instance: ValueSubstitutor?, hdl: CharacterStreamHandler, variableMap: Map<String, Any>?, tag: TemplateTag
+        instance: ValueSubstitutor?, hdl: CharacterStreamHandler, variableMap: Map<String, Any?>?, tag: TemplateTag
     ) {
         when (tag) {
             TemplateTag.VARIABLE -> substituteVariable(instance, hdl, variableMap)
@@ -346,7 +346,7 @@ class TemplateProcessor @JvmOverloads constructor(
         return null
     }
 
-    private fun extractStringValue(key: String, instance: ValueSubstitutor?, variableMap: Map<String, Any>?): String {
+    private fun extractStringValue(key: String, instance: ValueSubstitutor?, variableMap: Map<String, Any?>?): String {
         val v = extractVariableValue(key, instance, variableMap)
 
         if (v != null) {
@@ -366,7 +366,7 @@ class TemplateProcessor @JvmOverloads constructor(
     }
 
     private fun extractVariableValue(
-        key: String, instance: ValueSubstitutor?, variableMap: Map<String, Any>?
+        key: String, instance: ValueSubstitutor?, variableMap: Map<String, Any?>?
     ): Any? {
         var v: Any? = if (variableMap != null) variableMap[key] else null
 
@@ -390,7 +390,7 @@ class TemplateProcessor @JvmOverloads constructor(
 
     @Throws(IOException::class)
     private fun substituteVariableReplaceNewLineToBr(
-        instance: ValueSubstitutor?, hdl: CharacterStreamHandler, variableMap: Map<String, Any>?
+        instance: ValueSubstitutor?, hdl: CharacterStreamHandler, variableMap: Map<String, Any?>?
     ) {
         val key = readTagContent(hdl, TemplateTag.BRREPLACE)
 
@@ -417,7 +417,7 @@ class TemplateProcessor @JvmOverloads constructor(
 
     @Throws(IOException::class)
     private fun substituteVariableReplaceBrToNewLine(
-        instance: ValueSubstitutor?, hdl: CharacterStreamHandler, variableMap: Map<String, Any>?
+        instance: ValueSubstitutor?, hdl: CharacterStreamHandler, variableMap: Map<String, Any?>?
     ) {
         val key = readTagContent(hdl, TemplateTag.NLREPLACE)
 
@@ -444,7 +444,7 @@ class TemplateProcessor @JvmOverloads constructor(
 
     @Throws(IOException::class)
     private fun substituteSubVariable(
-        instance: ValueSubstitutor?, hdl: CharacterStreamHandler, variableMap: Map<String, Any>?
+        instance: ValueSubstitutor?, hdl: CharacterStreamHandler, variableMap: Map<String, Any?>?
     ) {
         val content = readTagContent(hdl, TemplateTag.SUBVARIABLE)
 
@@ -476,7 +476,7 @@ class TemplateProcessor @JvmOverloads constructor(
 
     @Throws(IOException::class)
     private fun substituteVariable(
-        instance: ValueSubstitutor?, hdl: CharacterStreamHandler, variableMap: Map<String, Any>?
+        instance: ValueSubstitutor?, hdl: CharacterStreamHandler, variableMap: Map<String, Any?>?
     ) {
         val key = readTagContent(hdl, TemplateTag.VARIABLE)
 
@@ -555,7 +555,7 @@ class TemplateProcessor @JvmOverloads constructor(
 
     @Throws(IOException::class)
     private fun substituteFunctionOutput(
-        instance: ValueSubstitutor?, hdl: CharacterStreamHandler, variableMap: Map<String, Any>?
+        instance: ValueSubstitutor?, hdl: CharacterStreamHandler, variableMap: Map<String, Any?>?
     ) {
         val functionDescriptorString = readTagContent(hdl, TemplateTag.FUNCTION)
 
@@ -716,7 +716,7 @@ class TemplateProcessor @JvmOverloads constructor(
 
     @Throws(IOException::class)
     private fun substituteArithmeticOutput(
-        instance: ValueSubstitutor?, hdl: CharacterStreamHandler, variableMap: Map<String, Any>?
+        instance: ValueSubstitutor?, hdl: CharacterStreamHandler, variableMap: Map<String, Any?>?
     ) {
         val content = readTagContent(hdl, TemplateTag.ARITHMETIC)
 
@@ -731,7 +731,7 @@ class TemplateProcessor @JvmOverloads constructor(
 
     @Throws(IOException::class)
     private fun substituteInlineContent(
-            content: String, instance: ValueSubstitutor?, variableMap: Map<String, Any>?
+            content: String, instance: ValueSubstitutor?, variableMap: Map<String, Any?>?
     ): String {
         val contentStreamHandler = CharacterStreamHandler(content)
 
@@ -749,7 +749,7 @@ class TemplateProcessor @JvmOverloads constructor(
 
     @Throws(IOException::class)
     private fun includeContent(
-        instance: ValueSubstitutor?, hdl: CharacterStreamHandler, variableMap: Map<String, Any>?
+        instance: ValueSubstitutor?, hdl: CharacterStreamHandler, variableMap: Map<String, Any?>?
     ) {
         val paramString = readTagContent(hdl, TemplateTag.INCLUDE)
 
@@ -775,7 +775,7 @@ class TemplateProcessor @JvmOverloads constructor(
 
     @Throws(IOException::class)
     private fun substituteRepeatingContent(
-        instance: ValueSubstitutor?, hdl: CharacterStreamHandler, variableMap: Map<String, Any>?
+        instance: ValueSubstitutor?, hdl: CharacterStreamHandler, variableMap: Map<String, Any?>?
     ) {
         val paramString = readTagContent(hdl, TemplateTag.REPEAT)
 
@@ -942,7 +942,7 @@ class TemplateProcessor @JvmOverloads constructor(
     }
 
     fun appendTemplateContent(
-            templateContent: String, valueSubstitutor: ValueSubstitutor?, variableMap: Map<String, Any>?
+            templateContent: String, valueSubstitutor: ValueSubstitutor?, variableMap: Map<String, Any?>?
     ): TemplateProcessor {
         try {
             appendResourceContent(CharacterStreamHandler(templateContent), valueSubstitutor, variableMap)
@@ -979,7 +979,7 @@ class TemplateProcessor @JvmOverloads constructor(
         return this
     }
 
-    fun appendResourceContent(resourceLocation: String, variableMap: Map<String, Any>): TemplateProcessor {
+    fun appendResourceContent(resourceLocation: String, variableMap: Map<String, Any?>): TemplateProcessor {
         val templateContent = getResourceContent(resourceLocation)
 
         if (templateContent != null) {
@@ -989,7 +989,6 @@ class TemplateProcessor @JvmOverloads constructor(
                 warnMissing("Resource [$resourceLocation] does not exists!")
                 return this
             }
-
         } else {
             return this
         }
@@ -1004,7 +1003,7 @@ class TemplateProcessor @JvmOverloads constructor(
 
     @JvmOverloads 
     fun appendResourceContent(
-        reader: Reader?, variableMap: Map<String, Any>? = null as Map<String, Any>?
+        reader: Reader?, variableMap: Map<String, Any?>? = null
     ): TemplateProcessor {
         if (reader != null) {
             try {
@@ -1021,7 +1020,7 @@ class TemplateProcessor @JvmOverloads constructor(
 
     @JvmOverloads 
     fun appendResourceContent(
-        resourceStream: InputStream?, variableMap: Map<String, Any>? = null as Map<String, Any>?
+        resourceStream: InputStream?, variableMap: Map<String, Any?>? = null
     ): TemplateProcessor {
         if (resourceStream != null) {
             return appendResourceContent(InputStreamReader(resourceStream, Charset.forName("UTF-8")), variableMap)
@@ -1055,7 +1054,7 @@ class TemplateProcessor @JvmOverloads constructor(
 
     @JvmOverloads 
     fun appendResourceContent(
-            resourceLocation: String, instance: ValueSubstitutor?, variableMap: Map<String, Any>? = null
+            resourceLocation: String, instance: ValueSubstitutor?, variableMap: Map<String, Any?>? = null
     ): TemplateProcessor {
         val resourceContent = getResourceContent(resourceLocation)
 
@@ -1072,7 +1071,7 @@ class TemplateProcessor @JvmOverloads constructor(
     }
 
     fun appendResourceContent(
-        reader: Reader?, instance: ValueSubstitutor?, variableMap: Map<String, Any>?
+        reader: Reader?, instance: ValueSubstitutor?, variableMap: Map<String, Any?>?
     ): TemplateProcessor {
         if (variableMap == null || variableMap.isEmpty()) {
             return appendResourceContent(reader, instance)
@@ -1093,7 +1092,7 @@ class TemplateProcessor @JvmOverloads constructor(
     }
 
     fun appendResourceContent(
-        resourceStream: InputStream?, instance: ValueSubstitutor, variableMap: Map<String, Any>?
+        resourceStream: InputStream?, instance: ValueSubstitutor, variableMap: Map<String, Any?>?
     ): TemplateProcessor {
         if (resourceStream != null) {
             return appendResourceContent(
@@ -1118,7 +1117,7 @@ class TemplateProcessor @JvmOverloads constructor(
 
     @Throws(IOException::class)
     fun appendResourceContent(
-        hdl: CharacterStreamHandler, instance: ValueSubstitutor?, variableMap: Map<String, Any>?
+        hdl: CharacterStreamHandler, instance: ValueSubstitutor?, variableMap: Map<String, Any?>?
     ): TemplateProcessor {
         while (hdl.hasNext()) {
             val buffer = hdl.readUntil(TemplateTag.START_PREFIX)
@@ -1141,7 +1140,7 @@ class TemplateProcessor @JvmOverloads constructor(
     }
 
     fun appendResourceContent(
-        clz: Class<*>, substitutorInstance: ValueSubstitutor, resourceLocation: String, variableMap: Map<String, Any>?
+        clz: Class<*>, substitutorInstance: ValueSubstitutor, resourceLocation: String, variableMap: Map<String, Any?>?
     ): TemplateProcessor {
         val templateContent = getResourceContent(clz, resourceLocation)
 
@@ -1161,7 +1160,7 @@ class TemplateProcessor @JvmOverloads constructor(
 
     fun appendResourceContents(
         clz: Class<*>, substitutorInstance: ValueSubstitutor, resourceLocations: List<String>,
-        variableMap: Map<String, Any>?
+        variableMap: Map<String, Any?>?
     ): TemplateProcessor {
         for (resourceLocation in resourceLocations) {
             appendResourceContent(clz, substitutorInstance, resourceLocation, variableMap)
@@ -1170,7 +1169,7 @@ class TemplateProcessor @JvmOverloads constructor(
     }
 
     fun appendResourceContent(
-        substitutorInstance: ValueSubstitutor, resourceLocation: String, variableMap: Map<String, Any>?
+        substitutorInstance: ValueSubstitutor, resourceLocation: String, variableMap: Map<String, Any?>?
     ): TemplateProcessor {
         val templateContent = getResourceContent(resourceLocation)
 
