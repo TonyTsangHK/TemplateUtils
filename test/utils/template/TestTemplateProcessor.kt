@@ -5,7 +5,6 @@ import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 import utils.file.FileUtil
 import utils.template.constant.ConstantFactory
-
 import java.util.HashMap
 
 /**

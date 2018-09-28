@@ -3,7 +3,6 @@ package utils.template.constant
 import utils.string.StringUtil
 import utils.template.ResourceLoader
 import utils.template.ValueSubstitutor
-
 import java.util.HashMap
 
 /**

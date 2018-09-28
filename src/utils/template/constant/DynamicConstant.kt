@@ -1,7 +1,6 @@
 package utils.template.constant
 
 import utils.date.DateTimeParser
-
 import java.util.Date
 
 /**
