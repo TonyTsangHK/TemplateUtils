@@ -4,3 +4,7 @@
 /.gradle
 /*.iml
 /test/localTest/*
+/.settings
+.classpath
+.project
+/bin
