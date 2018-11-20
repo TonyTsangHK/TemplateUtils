@@ -25,6 +25,8 @@ class ConstantHandler: ValueSubstitutorKt {
     private var constantMap: MutableMap<String, Any?>? = null
     private var overrideConstantMap: MutableMap<String, Map<String, Any>>? = null
 
+    private var constantPreprocessor: ConstantPreprocessor? = null
+    
     private var clz: Class<*>? = null
 
     private var parentConstantHandler: ConstantHandler? = null
@@ -40,9 +42,9 @@ class ConstantHandler: ValueSubstitutorKt {
     private var resourceVersion: Long = -1
     private var resourceEditable = false
 
-    constructor(clz: Class<*>, resourceName: String, vararg overrideResources: String) {
-        this.clz = clz
+    private fun setResources(resourceName: String, constantPreprocessor: ConstantPreprocessor? = null, vararg overrideResources: String) {
         this.resourceName = resourceName
+        this.constantPreprocessor = constantPreprocessor
         if (overrideResources.isNotEmpty()) {
             this.overrideResources = listOf(*overrideResources)
         } else {
@@ -51,62 +53,60 @@ class ConstantHandler: ValueSubstitutorKt {
         this.overrideConstantMap = null
     }
     
-    constructor(classLoader: ClassLoader, resourceName: String, vararg overrideResources: String) {
-        this.classLoader = classLoader
+    private fun setResources(resourceName: String, constantPreprocessor: ConstantPreprocessor? = null, overrideResources: List<String>?) {
         this.resourceName = resourceName
-        if (overrideResources.isNotEmpty()) {
-            this.overrideResources = listOf(*overrideResources)
-        } else {
-            this.overrideResources = null
-        }
-        this.overrideConstantMap = null
-    }
-    
-    constructor(resourceLoader: ResourceLoader, resourceName: String, vararg overrideResources: String) {
-        this.resourceLoader = resourceLoader
-        this.resourceName = resourceName
-        if (overrideResources.isNotEmpty()) {
-            this.overrideResources = listOf(*overrideResources)
-        } else {
-            this.overrideResources = null
-        }
-        this.overrideConstantMap = null
-    }
-    
-    @JvmOverloads 
-    constructor(clz: Class<*>, resourceName: String, overrideResources: List<String>? = null) {
-        this.clz = clz
-        this.resourceName = resourceName
+        this.constantPreprocessor = constantPreprocessor
         if (overrideResources != null && overrideResources.isNotEmpty()) {
             this.overrideResources = overrideResources
         } else {
             this.overrideResources = null
         }
         this.overrideConstantMap = null
+    }
+    
+    constructor(clz: Class<*>, resourceName: String, vararg overrideResources: String): this(clz, resourceName, null, *overrideResources)
+    
+    constructor(clz: Class<*>, resourceName: String, constantPreprocessor: ConstantPreprocessor? = null, vararg overrideResources: String) {
+        this.clz = clz
+        setResources(resourceName, constantPreprocessor, *overrideResources)
     }
 
-    @JvmOverloads 
-    constructor(classLoader: ClassLoader, resourceName: String, overrideResources: List<String>? = null) {
+    constructor(classLoader: ClassLoader, resourceName: String, vararg overrideResources: String): this(classLoader, resourceName, null, *overrideResources)
+    
+    constructor(classLoader: ClassLoader, resourceName: String, constantPreprocessor: ConstantPreprocessor? = null, vararg overrideResources: String) {
         this.classLoader = classLoader
-        this.resourceName = resourceName
-        if (overrideResources != null && overrideResources.isNotEmpty()) {
-            this.overrideResources = overrideResources
-        } else {
-            this.overrideResources = null
-        }
-        this.overrideConstantMap = null
+        setResources(resourceName, constantPreprocessor, *overrideResources)
     }
     
-    @JvmOverloads
-    constructor(resourceLoader: ResourceLoader, resourceName: String, overrideResources: List<String>? = null) {
+    constructor(resourceLoader: ResourceLoader, resourceName: String, vararg overrideResources: String): this(resourceLoader, resourceName, null, *overrideResources)
+    
+    constructor(resourceLoader: ResourceLoader, resourceName: String, constantPreprocessor: ConstantPreprocessor? = null, vararg overrideResources: String) {
         this.resourceLoader = resourceLoader
-        this.resourceName = resourceName
-        if (overrideResources != null && overrideResources.isNotEmpty()) {
-            this.overrideResources = overrideResources
-        } else {
-            this.overrideResources
-        }
-        this.overrideConstantMap = null
+        setResources(resourceName, constantPreprocessor, *overrideResources)
+    }
+    
+    constructor(clz: Class<*>, resourceName: String, overrideResouces: List<String>? = null): this(clz, resourceName, null, overrideResouces)
+    
+    @JvmOverloads 
+    constructor(clz: Class<*>, resourceName: String, constantPreprocessor: ConstantPreprocessor? = null, overrideResources: List<String>? = null) {
+        this.clz = clz
+        setResources(resourceName, constantPreprocessor, overrideResources)
+    }
+    
+    constructor(classLoader: ClassLoader, resourceName: String, overrideResources: List<String>? = null): this(classLoader, resourceName, null, overrideResources)
+
+    @JvmOverloads
+    constructor(classLoader: ClassLoader, resourceName: String, constantPreprocessor: ConstantPreprocessor? = null, overrideResources: List<String>? = null) {
+        this.classLoader = classLoader
+        setResources(resourceName, constantPreprocessor, overrideResources)
+    }
+    
+    constructor(resourceLoader: ResourceLoader, resourceName: String, overrideResources: List<String>? = null): this(resourceLoader, resourceName, null, overrideResources)
+    
+    @JvmOverloads
+    constructor(resourceLoader: ResourceLoader, resourceName: String, constantPreprocessor: ConstantPreprocessor? = null, overrideResources: List<String>? = null) {
+        this.resourceLoader = resourceLoader
+        setResources(resourceName, constantPreprocessor, overrideResources)
     }
 
     // parentConstantHandler should be nullable, setting it to be null means clearing the parentConstantHandler
@@ -172,8 +172,8 @@ class ConstantHandler: ValueSubstitutorKt {
             val localResourceFile = File(url.file)
             resourceFile = localResourceFile
 
-            var resourceAccessibleAndExist = false
-            
+            var resourceAccessibleAndExist: Boolean
+
             // Properly check for accessibility of the underlying resource file.
             try {
                 resourceAccessibleAndExist = localResourceFile.exists()
@@ -211,6 +211,7 @@ class ConstantHandler: ValueSubstitutorKt {
                     
                     processOverrideConstantMap()
                 }
+                constantPreprocessor?.doPreprocess(constantMap as MutableMap<String, Any?>)
                 mapPreprocess(constantMap as MutableMap<String, Any?>)
             } else {
                 loadResource()
@@ -223,6 +224,7 @@ class ConstantHandler: ValueSubstitutorKt {
             resourceVersion = resourceFile!!.lastModified()
             constantMap = JsonParser.getInstance().parseMutableMap<Any?>(FileUtil.getFileContent(resourceFile))
             processOverrideConstantMap()
+            constantPreprocessor?.doPreprocess(constantMap as MutableMap<String, Any?>)
             mapPreprocess(constantMap as MutableMap<String, Any?>)
             
             // loaded from resource file, the resource file may be editable
