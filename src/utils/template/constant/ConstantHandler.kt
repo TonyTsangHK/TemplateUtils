@@ -21,7 +21,7 @@ import java.util.*
  * Date: 2014-01-09
  * Time: 10:24
  */
-class ConstantHandler: ValueSubstitutorKt {
+class ConstantHandler: ValueSubstitutorKt, ConstantChangeListener {
     private var constantMap: MutableMap<String, Any?>? = null
     private var overrideConstantMap: MutableMap<String, Map<String, Any>>? = null
 
@@ -155,6 +155,11 @@ class ConstantHandler: ValueSubstitutorKt {
         return result
     }
 
+    fun refreshConstant() {
+        constantMap = null
+        ensureConstantMap()
+    }
+    
     private fun ensureResources() {
         val url: URL?
         
@@ -212,6 +217,7 @@ class ConstantHandler: ValueSubstitutorKt {
                     processOverrideConstantMap()
                 }
                 constantPreprocessor?.doPreprocess(constantMap as MutableMap<String, Any?>)
+                constantPreprocessor?.addConstantChangeListener(this)
                 mapPreprocess(constantMap as MutableMap<String, Any?>)
             } else {
                 loadResource()
@@ -225,6 +231,7 @@ class ConstantHandler: ValueSubstitutorKt {
             constantMap = JsonParser.getInstance().parseMutableMap<Any?>(FileUtil.getFileContent(resourceFile))
             processOverrideConstantMap()
             constantPreprocessor?.doPreprocess(constantMap as MutableMap<String, Any?>)
+            constantPreprocessor?.addConstantChangeListener(this)
             mapPreprocess(constantMap as MutableMap<String, Any?>)
             
             // loaded from resource file, the resource file may be editable
@@ -675,9 +682,17 @@ class ConstantHandler: ValueSubstitutorKt {
         } else if (keys.size == 1) {
             return getVariableStringValue(keys[0], true)!!
         } else {
-            val substitutes = Array<String>(keys.size-1, { keys[it+1] })
+            val substitutes = Array(keys.size-1, { keys[it+1] })
 
             return getVariableStringValue(keys[0], true, *substitutes)!!
         }
+    }
+    
+    private fun invalidate() {
+        constantMap = null
+    }
+
+    override fun constantChanged() {
+        invalidate()
     }
 }

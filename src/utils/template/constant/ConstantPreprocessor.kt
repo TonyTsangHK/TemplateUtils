@@ -8,4 +8,5 @@ package utils.template.constant
  */
 interface ConstantPreprocessor {
     fun doPreprocess(constantMap: MutableMap<String, Any?>)
+    fun addConstantChangeListener(constantChangeListener: ConstantChangeListener)
 }
